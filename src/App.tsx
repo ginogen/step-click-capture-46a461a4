@@ -10,32 +10,14 @@ import Auth from "./pages/Auth";
 // Initialize the query client outside the component
 const queryClient = new QueryClient();
 
-// Get the Clerk publishable key
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-console.log("Environment variable status:", {
-  hasKey: !!clerkPubKey,
-  keyValue: clerkPubKey,
-});
+// Para pruebas, usamos una clave directamente
+// En producción, esto debería venir de una variable de entorno
+const clerkPubKey = "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
 
 // Define the App component
 const App = () => {
-  console.log("App component rendering, Clerk key:", clerkPubKey);
+  console.log("App component rendering with test key");
 
-  // If there's no Clerk key, show an error message instead of throwing
-  if (!clerkPubKey) {
-    console.log("No Clerk key found, showing error message");
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
-        <div className="text-center p-4">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">Error de Configuración</h1>
-          <p className="text-gray-600">Configuración de autenticación faltante.</p>
-          <p className="text-sm text-gray-500 mt-2">Key: {String(clerkPubKey)}</p>
-        </div>
-      </div>
-    );
-  }
-
-  console.log("Initializing ClerkProvider with key:", clerkPubKey);
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
       <QueryClientProvider client={queryClient}>
