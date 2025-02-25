@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 
 // Para pruebas, usamos una clave directamente
 // En producción, esto debería venir de una variable de entorno
-const clerkPubKey = "pk_test_Y2xlcmsubG92YWJsZS5kZXYk";
+const clerkPubKey = "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
 
 // Define the App component
 const App = () => {
