@@ -7,16 +7,16 @@ import Welcome from "./pages/Welcome";
 import Process from "./pages/Process";
 import Auth from "./pages/Auth";
 
-// Initialize the query client outside the component
 const queryClient = new QueryClient();
 
-// Para pruebas, usamos una clave directamente
-// En producción, esto debería venir de una variable de entorno
-const clerkPubKey = "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = process.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
 
-// Define the App component
+if (!clerkPubKey) {
+  throw new Error("Missing Clerk Publishable Key");
+}
+
 const App = () => {
-  console.log("App component rendering with test key");
+  console.log("App component rendering with Clerk key:", clerkPubKey);
 
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
