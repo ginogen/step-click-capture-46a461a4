@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send } from "lucide-react";
 import { useConversation } from "@11labs/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const STEPS = [
   {
@@ -14,8 +15,7 @@ const STEPS = [
     title: "Paso 2",
     instruction: "Para la segunda foto, necesitamos que...",
     voiceInstruction: "Para la segunda foto, necesitamos que..."
-  },
-  // ... Add all 6 steps with specific instructions
+  }
 ];
 
 const Process = () => {
@@ -23,61 +23,96 @@ const Process = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
   const [showCamera, setShowCamera] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const { toast } = useToast();
   const conversation = useConversation();
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' }
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudo acceder a la cámara"
+      });
+      console.error('Error accessing camera:', error);
+    }
+  };
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+      tracks.forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+  };
   
   const handleStartProcess = () => {
     setStarted(true);
   };
 
-  const handlePhotoCapture = async (photoData: string) => {
-    const now = new Date();
+  const handlePhotoCapture = () => {
+    if (!videoRef.current) return;
+
     const canvas = document.createElement('canvas');
-    const img = new Image();
+    const video = videoRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Capturar la imagen del video
+    ctx.drawImage(video, 0, 0);
+
+    // Agregar marca de agua
+    const now = new Date();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
     
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      
-      // Draw the original image
-      ctx.drawImage(img, 0, 0);
-      
-      // Add watermark
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-      ctx.fillRect(0, img.height - 40, img.width, 40);
-      
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Arial';
-      ctx.fillText(now.toLocaleString(), 10, img.height - 15);
-      ctx.fillText('PhotoProcess', img.width - 100, img.height - 15);
-      
-      const watermarkedImage = canvas.toDataURL('image/jpeg');
-      setPhotos([...photos, watermarkedImage]);
-      setShowCamera(false);
-      
-      if (currentStep < STEPS.length - 1) {
-        setCurrentStep(currentStep + 1);
-      }
-    };
-    
-    img.src = photoData;
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Arial';
+    ctx.fillText(now.toLocaleString(), 10, canvas.height - 15);
+    ctx.fillText('PhotoProcess', canvas.width - 100, canvas.height - 15);
+
+    const photoData = canvas.toDataURL('image/jpeg');
+    setPhotos([...photos, photoData]);
+    setShowCamera(false);
+    stopCamera();
+
+    if (currentStep < STEPS.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+
+    toast({
+      title: "¡Foto capturada!",
+      description: `Paso ${currentStep + 1} completado`
+    });
   };
 
   const handleVoiceInstructions = async () => {
-    // Initialize voice instructions using ElevenLabs
     try {
       await conversation.startSession({ 
         agentId: "YOUR_AGENT_ID",
         overrides: {
           tts: {
-            voiceId: "EXAVITQu4vr4xnSDxMaL" // Sarah's voice
+            voiceId: "EXAVITQu4vr4xnSDxMaL"
           }
         }
       });
     } catch (error) {
       console.error("Error starting voice conversation:", error);
     }
+  };
+
+  const handleOpenCamera = () => {
+    setShowCamera(true);
+    startCamera();
   };
 
   if (!started) {
@@ -96,10 +131,15 @@ const Process = () => {
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
-        <div className="camera-container">
-          <video className="camera-preview" autoPlay playsInline />
+        <div className="relative w-full max-w-lg mx-auto">
+          <video 
+            ref={videoRef} 
+            className="w-full h-full rounded-lg"
+            autoPlay 
+            playsInline
+          />
           <Button
-            onClick={() => {/* Implement photo capture logic */}}
+            onClick={handlePhotoCapture}
             className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-black hover:bg-gray-100"
           >
             <Camera className="w-8 h-8" />
@@ -114,7 +154,7 @@ const Process = () => {
 
           <div className="flex justify-center space-x-4">
             <Button
-              onClick={() => setShowCamera(true)}
+              onClick={handleOpenCamera}
               className="bg-black hover:bg-gray-800 text-white"
             >
               <Camera className="w-5 h-5 mr-2" />
@@ -136,7 +176,11 @@ const Process = () => {
               <div className="grid gap-4">
                 {photos.map((photo, index) => (
                   <div key={index} className="photo-preview">
-                    <img src={photo} alt={`Paso ${index + 1}`} className="rounded-lg shadow-lg" />
+                    <img 
+                      src={photo} 
+                      alt={`Paso ${index + 1}`} 
+                      className="rounded-lg shadow-lg w-full max-w-lg mx-auto"
+                    />
                   </div>
                 ))}
               </div>
