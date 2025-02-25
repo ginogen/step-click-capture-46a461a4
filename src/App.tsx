@@ -9,17 +9,21 @@ import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
-const clerkPubKey = process.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
-
-if (!clerkPubKey) {
-  throw new Error("Missing Clerk Publishable Key");
-}
+// Asegurarnos de usar la clave correcta y configuración apropiada
+const clerkPubKey = "pk_test_bGFyZ2UtbWVlcmthdC0yNC5jbGVyay5hY2NvdW50cy5kZXYk";
 
 const App = () => {
-  console.log("App component rendering with Clerk key:", clerkPubKey);
-
   return (
-    <ClerkProvider publishableKey={clerkPubKey}>
+    <ClerkProvider 
+      publishableKey={clerkPubKey}
+      appearance={{
+        baseTheme: undefined,
+        variables: { colorPrimary: '#0F172A' },
+        layout: {
+          socialButtonsPlacement: 'bottom'
+        }
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
