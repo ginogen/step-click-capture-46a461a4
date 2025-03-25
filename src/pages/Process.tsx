@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -60,6 +60,9 @@ const GUIDE_IMAGES = {
   ]
 };
 
+// Logo de la empresa
+const COMPANY_LOGO = "public/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
+
 // Función para generar pasos basados en tipo de cobertura
 const generateStepsForCoverage = (coverageType) => {
   const { requiredPhotos } = COVERAGE_TYPES.find(
@@ -114,7 +117,10 @@ const Process = () => {
   const [photos, setPhotos] = useState<string[]>([]);
   const [showCamera, setShowCamera] = useState(false);
   const [hasGNC, setHasGNC] = useState<boolean | null>(null);
+  const [userLocation, setUserLocation] = useState<string>("Ubicación no disponible");
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
   const conversation = useConversation();
 
@@ -125,6 +131,46 @@ const Process = () => {
     }
   }, [coverageType]);
 
+  // Cargar imagen de logo
+  useEffect(() => {
+    const logoImg = new Image();
+    logoImg.src = COMPANY_LOGO;
+    logoImg.onload = () => {
+      logoRef.current = logoImg;
+    };
+  }, []);
+
+  // Función para obtener la ubicación del usuario
+  const getUserLocation = () => {
+    setIsGettingLocation(true);
+    
+    if (!navigator.geolocation) {
+      setUserLocation("Geolocalización no soportada en este dispositivo");
+      setIsGettingLocation(false);
+      return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation(`Lat: ${latitude.toFixed(6)}, Long: ${longitude.toFixed(6)}`);
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        console.error("Error obteniendo ubicación:", error);
+        setUserLocation("Error al obtener ubicación");
+        setIsGettingLocation(false);
+        
+        toast({
+          variant: "destructive",
+          title: "Error de geolocalización",
+          description: "No se pudo acceder a la ubicación. Revisa los permisos de tu navegador."
+        });
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  };
+
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -133,6 +179,10 @@ const Process = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
+      
+      // Intentar obtener la ubicación cuando se abre la cámara
+      getUserLocation();
+      
     } catch (error) {
       toast({
         variant: "destructive",
@@ -177,15 +227,29 @@ const Process = () => {
     // Capturar la imagen del video
     ctx.drawImage(video, 0, 0);
 
-    // Agregar marca de agua
+    // Agregar marca de agua con fecha, hora y ubicación
     const now = new Date();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+    const watermarkHeight = 60; // Altura de la marca de agua (más alta para incluir ubicación)
     
+    // Fondo semitransparente para la marca de agua
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(0, canvas.height - watermarkHeight, canvas.width, watermarkHeight);
+    
+    // Texto de la marca de agua
     ctx.fillStyle = 'white';
     ctx.font = '16px Arial';
-    ctx.fillText(now.toLocaleString(), 10, canvas.height - 15);
-    ctx.fillText('PhotoProcess', canvas.width - 100, canvas.height - 15);
+    ctx.fillText(now.toLocaleString(), 10, canvas.height - 35);
+    ctx.fillText(`Ubicación: ${userLocation}`, 10, canvas.height - 15);
+    
+    // Agregar logo de la empresa a la derecha
+    if (logoRef.current) {
+      const logoWidth = 100;
+      const logoHeight = 40;
+      const logoX = canvas.width - logoWidth - 10;
+      const logoY = canvas.height - logoHeight - 10;
+      
+      ctx.drawImage(logoRef.current, logoX, logoY, logoWidth, logoHeight);
+    }
 
     const photoData = canvas.toDataURL('image/jpeg');
     setPhotos([...photos, photoData]);
@@ -353,6 +417,13 @@ const Process = () => {
             autoPlay 
             playsInline
           />
+          
+          {/* Indicador de ubicación */}
+          <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md flex items-center">
+            <MapPin className="w-3 h-3 mr-1" />
+            {isGettingLocation ? "Obteniendo ubicación..." : userLocation}
+          </div>
+          
           <Button
             onClick={handlePhotoCapture}
             className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-black hover:bg-gray-100"
