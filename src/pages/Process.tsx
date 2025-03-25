@@ -1,31 +1,65 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
 
-const STEPS = [
+// Definición de tipos de coberturas y sus pasos correspondientes
+const COVERAGE_TYPES = [
   {
-    title: "Paso 1",
-    instruction: "Captura la primera foto siguiendo estas instrucciones...",
-    voiceInstruction: "Por favor, toma la primera foto siguiendo estas instrucciones..."
+    id: "responsabilidad_civil",
+    name: "Responsabilidad Civil",
+    requiredPhotos: 2,
   },
   {
-    title: "Paso 2",
-    instruction: "Para la segunda foto, necesitamos que...",
-    voiceInstruction: "Para la segunda foto, necesitamos que..."
-  }
+    id: "intermedia",
+    name: "Intermedia",
+    requiredPhotos: 3,
+  },
+  {
+    id: "terceros_completo",
+    name: "Terceros Completo",
+    requiredPhotos: 4,
+  },
+  {
+    id: "todo_riesgo",
+    name: "Todo Riesgo",
+    requiredPhotos: 6,
+  },
 ];
+
+// Función para generar pasos basados en tipo de cobertura
+const generateStepsForCoverage = (coverageType) => {
+  const { requiredPhotos } = COVERAGE_TYPES.find(
+    (type) => type.id === coverageType
+  ) || { requiredPhotos: 2 };
+  
+  return Array.from({ length: requiredPhotos }, (_, index) => ({
+    title: `Paso ${index + 1}`,
+    instruction: `Captura la foto ${index + 1} siguiendo estas instrucciones...`,
+    voiceInstruction: `Por favor, toma la foto ${index + 1} siguiendo estas instrucciones...`
+  }));
+};
 
 const Process = () => {
   const [started, setStarted] = useState(false);
+  const [coverageSelected, setCoverageSelected] = useState(false);
+  const [coverageType, setCoverageType] = useState("");
+  const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
   const [showCamera, setShowCamera] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
   const conversation = useConversation();
+
+  // Efecto para actualizar pasos cuando se selecciona cobertura
+  useEffect(() => {
+    if (coverageType) {
+      setSteps(generateStepsForCoverage(coverageType));
+    }
+  }, [coverageType]);
 
   const startCamera = async () => {
     try {
@@ -57,6 +91,15 @@ const Process = () => {
     setStarted(true);
   };
 
+  const handleCoverageSelect = (coverage) => {
+    setCoverageType(coverage);
+    setCoverageSelected(true);
+    toast({
+      title: "Cobertura seleccionada",
+      description: `Has elegido la cobertura: ${COVERAGE_TYPES.find(type => type.id === coverage)?.name}`
+    });
+  };
+
   const handlePhotoCapture = () => {
     if (!videoRef.current) return;
 
@@ -85,7 +128,7 @@ const Process = () => {
     setShowCamera(false);
     stopCamera();
 
-    if (currentStep < STEPS.length - 1) {
+    if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
 
@@ -128,6 +171,34 @@ const Process = () => {
     );
   }
 
+  // Mostrar selección de cobertura si aún no se ha seleccionado
+  if (started && !coverageSelected) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-gray-50 to-gray-100">
+        <div className="max-w-lg mx-auto text-center mb-8">
+          <h2 className="text-2xl font-bold mb-4">Selecciona tu tipo de cobertura</h2>
+          <p className="text-gray-600">El tipo de cobertura determinará cuántas fotos necesitarás tomar.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg">
+          {COVERAGE_TYPES.map((coverage) => (
+            <Button
+              key={coverage.id}
+              onClick={() => handleCoverageSelect(coverage.id)}
+              className="py-6 bg-white hover:bg-gray-100 text-black border border-gray-300 transition-all duration-200"
+              variant="outline"
+            >
+              <div className="flex flex-col items-center">
+                <span className="font-medium">{coverage.name}</span>
+                <span className="text-sm text-gray-500 mt-1">{coverage.requiredPhotos} fotos</span>
+              </div>
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
@@ -148,8 +219,8 @@ const Process = () => {
       ) : (
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold">{STEPS[currentStep].title}</h2>
-            <p className="text-gray-600 mt-2">{STEPS[currentStep].instruction}</p>
+            <h2 className="text-2xl font-bold">{steps[currentStep]?.title}</h2>
+            <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
           </div>
 
           <div className="flex justify-center space-x-4">
@@ -172,7 +243,7 @@ const Process = () => {
 
           {photos.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-center">Fotos Capturadas</h3>
+              <h3 className="text-xl font-semibold text-center">Fotos Capturadas ({photos.length}/{steps.length})</h3>
               <div className="grid gap-4">
                 {photos.map((photo, index) => (
                   <div key={index} className="photo-preview">
@@ -185,7 +256,7 @@ const Process = () => {
                 ))}
               </div>
 
-              {photos.length === STEPS.length && (
+              {photos.length === steps.length && (
                 <Button
                   onClick={() => {/* Implement send logic */}}
                   className="w-full py-6 bg-green-600 hover:bg-green-700 text-white"
