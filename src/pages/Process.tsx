@@ -28,7 +28,7 @@ const COVERAGE_TYPES = [
   },
 ];
 
-// Imágenes de guía para Responsabilidad Civil - Fix: Removed 'public/' prefix from image paths
+// Imágenes de guía para Responsabilidad Civil
 const GUIDE_IMAGES = {
   responsabilidad_civil: [
     {
@@ -59,7 +59,7 @@ const GUIDE_IMAGES = {
   ]
 };
 
-// Logo de la empresa - Fix: Removed 'public/' prefix from image path
+// Logo de la empresa
 const COMPANY_LOGO = "/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
 
 // Función para generar pasos basados en tipo de cobertura
@@ -118,6 +118,7 @@ const Process = () => {
   const [hasGNC, setHasGNC] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] = useState<string>("Ubicación no disponible");
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [permissionDenied, setPermissionDenied] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -137,11 +138,20 @@ const Process = () => {
     logoImg.onload = () => {
       logoRef.current = logoImg;
     };
+    logoImg.onerror = (e) => {
+      console.error("Error cargando el logo:", e);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudo cargar el logo de la empresa"
+      });
+    };
   }, []);
 
-  // Función para obtener la ubicación del usuario - Improved error handling
-  const getUserLocation = () => {
+  // Función para solicitar permisos de geolocalización explícitamente
+  const requestLocationPermission = () => {
     setIsGettingLocation(true);
+    setPermissionDenied(false);
     
     if (!navigator.geolocation) {
       setUserLocation("Geolocalización no soportada en este dispositivo");
@@ -149,37 +159,65 @@ const Process = () => {
       return;
     }
     
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation(`Lat: ${latitude.toFixed(6)}, Long: ${longitude.toFixed(6)}`);
-        setIsGettingLocation(false);
-      },
-      (error) => {
-        console.error("Error obteniendo ubicación:", error);
-        
-        // Mensajes de error más específicos según el código de error
-        let errorMessage = "Error al obtener ubicación";
-        
-        if (error.code === 1) {
-          errorMessage = "Permiso de ubicación denegado por el usuario";
-        } else if (error.code === 2) {
-          errorMessage = "No se pudo determinar la ubicación";
-        } else if (error.code === 3) {
-          errorMessage = "Tiempo de espera agotado para obtener la ubicación";
-        }
-        
-        setUserLocation(errorMessage);
+    navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
+      console.log("Estado del permiso de geolocalización:", permissionStatus.state);
+      
+      if (permissionStatus.state === 'denied') {
+        setPermissionDenied(true);
+        setUserLocation("Permiso de ubicación denegado");
         setIsGettingLocation(false);
         
         toast({
           variant: "destructive",
-          title: "Error de geolocalización",
-          description: errorMessage + ". Las fotos se tomarán sin información de ubicación."
+          title: "Permiso denegado",
+          description: "Has bloqueado el acceso a tu ubicación. Revisa la configuración de tu navegador para permitir el acceso."
         });
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    );
+        return;
+      }
+      
+      // Intentar obtener la ubicación actual
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation(`Lat: ${latitude.toFixed(6)}, Long: ${longitude.toFixed(6)}`);
+          setIsGettingLocation(false);
+          setPermissionDenied(false);
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error);
+          
+          let errorMessage = "Error al obtener ubicación";
+          
+          if (error.code === 1) {
+            setPermissionDenied(true);
+            errorMessage = "Permiso de ubicación denegado por el usuario";
+          } else if (error.code === 2) {
+            errorMessage = "No se pudo determinar la ubicación";
+          } else if (error.code === 3) {
+            errorMessage = "Tiempo de espera agotado para obtener la ubicación";
+          }
+          
+          setUserLocation(errorMessage);
+          setIsGettingLocation(false);
+          
+          toast({
+            variant: "destructive",
+            title: "Error de geolocalización",
+            description: errorMessage + ". Las fotos se tomarán sin información de ubicación.",
+            action: error.code === 1 ? (
+              <Button 
+                onClick={() => requestLocationPermission()}
+                variant="outline" 
+                size="sm"
+              >
+                Reintentar
+              </Button>
+            ) : undefined
+          });
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    });
   };
 
   const startCamera = async () => {
@@ -192,7 +230,23 @@ const Process = () => {
       }
       
       // Intentar obtener la ubicación cuando se abre la cámara
-      getUserLocation();
+      if (!permissionDenied) {
+        requestLocationPermission();
+      } else {
+        toast({
+          title: "Ubicación no disponible",
+          description: "Se tomarán fotos sin información de ubicación",
+          action: (
+            <Button 
+              onClick={() => requestLocationPermission()}
+              variant="outline" 
+              size="sm"
+            >
+              Permitir ubicación
+            </Button>
+          )
+        });
+      }
       
     } catch (error) {
       toast({
@@ -433,6 +487,15 @@ const Process = () => {
           <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md flex items-center">
             <MapPin className="w-3 h-3 mr-1" />
             {isGettingLocation ? "Obteniendo ubicación..." : userLocation}
+            {permissionDenied && (
+              <Button 
+                onClick={requestLocationPermission}
+                variant="link" 
+                className="text-xs text-white p-0 ml-1 h-auto"
+              >
+                Activar
+              </Button>
+            )}
           </div>
           
           <Button
@@ -457,6 +520,15 @@ const Process = () => {
                   src={steps[currentStep].guideImage} 
                   alt={`Guía: ${steps[currentStep].title}`} 
                   className="max-w-full h-auto"
+                  onError={(e) => {
+                    console.error("Error cargando imagen de guía:", e);
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Cpath d='M75,50 L25,50 M50,25 L50,75' stroke='%23cccccc' stroke-width='4'/%3E%3C/svg%3E";
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "No se pudo cargar la imagen de guía"
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -479,6 +551,18 @@ const Process = () => {
               <HelpCircle className="w-5 h-5 mr-2" />
               Instrucciones
             </Button>
+
+            {/* Mostrar botón de ubicación si está denegada */}
+            {permissionDenied && (
+              <Button
+                onClick={requestLocationPermission}
+                variant="ghost"
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <MapPin className="w-5 h-5 mr-2" />
+                Ubicación
+              </Button>
+            )}
 
             {/* Mostrar botón de omitir solo para pasos opcionales */}
             {steps[currentStep]?.optional && (
