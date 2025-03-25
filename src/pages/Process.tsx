@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send } from "lucide-react";
+import { Camera, Check, Send, HelpCircle } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -10,7 +10,7 @@ const COVERAGE_TYPES = [
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 2,
+    requiredPhotos: 8, // 5 fotos del vehículo + cédula verde + DNI + GNC (opcional)
   },
   {
     id: "intermedia",
@@ -29,12 +29,75 @@ const COVERAGE_TYPES = [
   },
 ];
 
+// Imágenes de guía para Responsabilidad Civil
+const GUIDE_IMAGES = {
+  responsabilidad_civil: [
+    {
+      url: "public/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
+      title: "ADELANTE",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "public/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
+      title: "ATRAS",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "public/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
+      title: "LATERAL DERECHO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "public/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
+      title: "LATERAL IZQUIERDO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "public/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
+      title: "DEL CUENTA KM",
+      instruction: "Capturar claramente los kilómetros del vehículo."
+    }
+  ]
+};
+
 // Función para generar pasos basados en tipo de cobertura
 const generateStepsForCoverage = (coverageType) => {
   const { requiredPhotos } = COVERAGE_TYPES.find(
     (type) => type.id === coverageType
   ) || { requiredPhotos: 2 };
   
+  // Si es responsabilidad civil, generar pasos específicos
+  if (coverageType === "responsabilidad_civil") {
+    const vehiclePhotos = GUIDE_IMAGES.responsabilidad_civil.map((image, index) => ({
+      title: `${image.title}`,
+      instruction: `${image.instruction}`,
+      voiceInstruction: `Por favor, toma la foto ${index + 1}: ${image.title}. ${image.instruction}`,
+      guideImage: image.url
+    }));
+    
+    // Agregar pasos adicionales específicos
+    return [
+      ...vehiclePhotos,
+      {
+        title: "Cédula Verde",
+        instruction: "Toma una foto clara de la cédula verde del vehículo.",
+        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
+      },
+      {
+        title: "DNI",
+        instruction: "Toma una foto de tu DNI (ambos lados).",
+        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
+      },
+      {
+        title: "GNC (si corresponde)",
+        instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
+        voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
+        optional: true
+      }
+    ];
+  }
+  
+  // Para otros tipos de cobertura, generar pasos genéricos
   return Array.from({ length: requiredPhotos }, (_, index) => ({
     title: `Paso ${index + 1}`,
     instruction: `Captura la foto ${index + 1} siguiendo estas instrucciones...`,
@@ -50,6 +113,7 @@ const Process = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
   const [showCamera, setShowCamera] = useState(false);
+  const [hasGNC, setHasGNC] = useState<boolean | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
   const conversation = useConversation();
@@ -128,14 +192,78 @@ const Process = () => {
     setShowCamera(false);
     stopCamera();
 
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
-
+    // Mostrar el mensaje correcto para el paso actual
     toast({
       title: "¡Foto capturada!",
-      description: `Paso ${currentStep + 1} completado`
+      description: `${steps[currentStep]?.title} completado`
     });
+
+    // Manejar el caso especial del paso GNC
+    if (coverageType === "responsabilidad_civil" && currentStep === 6) {
+      // Si estamos en el paso de DNI, preguntar si tiene GNC
+      showGNCQuestion();
+    } else if (
+      coverageType === "responsabilidad_civil" && 
+      currentStep === 7 && 
+      hasGNC === false
+    ) {
+      // Si no tiene GNC, saltarse ese paso y finalizar
+      handleComplete();
+    } else if (currentStep < steps.length - 1) {
+      // Avanzar al siguiente paso normalmente
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Completar el proceso
+      handleComplete();
+    }
+  };
+
+  const showGNCQuestion = () => {
+    // Mostrar pregunta sobre GNC
+    toast({
+      title: "¿Tu vehículo tiene GNC?",
+      description: "Selecciona Sí o No para continuar",
+      action: (
+        <div className="flex gap-2 mt-2">
+          <Button 
+            onClick={() => handleGNCResponse(true)}
+            variant="default" 
+            size="sm"
+          >
+            Sí
+          </Button>
+          <Button 
+            onClick={() => handleGNCResponse(false)}
+            variant="outline" 
+            size="sm"
+          >
+            No
+          </Button>
+        </div>
+      ),
+      duration: 10000, // Duración más larga para que tenga tiempo de responder
+    });
+  };
+
+  const handleGNCResponse = (hasGNCInstalled: boolean) => {
+    setHasGNC(hasGNCInstalled);
+    
+    if (hasGNCInstalled) {
+      // Si tiene GNC, continuar al siguiente paso
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Si no tiene GNC, terminar el proceso
+      handleComplete();
+    }
+  };
+
+  const handleComplete = () => {
+    toast({
+      title: "¡Proceso completado!",
+      description: "Todas las fotos han sido capturadas correctamente.",
+      variant: "default",
+    });
+    // Aquí se podría enviar las fotos al servidor
   };
 
   const handleVoiceInstructions = async () => {
@@ -156,6 +284,22 @@ const Process = () => {
   const handleOpenCamera = () => {
     setShowCamera(true);
     startCamera();
+  };
+
+  const handleSkipStep = () => {
+    // Solo permitir saltar el paso de GNC si es opcional
+    if (steps[currentStep]?.optional) {
+      toast({
+        title: "Paso omitido",
+        description: `Has omitido el paso: ${steps[currentStep]?.title}`,
+      });
+      
+      if (currentStep < steps.length - 1) {
+        setCurrentStep(currentStep + 1);
+      } else {
+        handleComplete();
+      }
+    }
   };
 
   if (!started) {
@@ -223,6 +367,19 @@ const Process = () => {
             <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
           </div>
 
+          {/* Mostrar imagen de guía si existe para el paso actual */}
+          {steps[currentStep]?.guideImage && (
+            <div className="flex justify-center my-4">
+              <div className="relative border-2 border-black rounded-lg overflow-hidden">
+                <img 
+                  src={steps[currentStep].guideImage} 
+                  alt={`Guía: ${steps[currentStep].title}`} 
+                  className="max-w-full h-auto"
+                />
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-center space-x-4">
             <Button
               onClick={handleOpenCamera}
@@ -237,28 +394,59 @@ const Process = () => {
               variant="outline"
               className="border-black text-black hover:bg-gray-100"
             >
-              Instrucciones por Voz
+              <HelpCircle className="w-5 h-5 mr-2" />
+              Instrucciones
             </Button>
+
+            {/* Mostrar botón de omitir solo para pasos opcionales */}
+            {steps[currentStep]?.optional && (
+              <Button
+                onClick={handleSkipStep}
+                variant="ghost"
+                className="text-gray-500 hover:text-gray-800"
+              >
+                Omitir
+              </Button>
+            )}
           </div>
 
           {photos.length > 0 && (
             <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-center">Fotos Capturadas ({photos.length}/{steps.length})</h3>
+              <h3 className="text-xl font-semibold text-center">
+                Fotos Capturadas ({photos.length}/{hasGNC === false ? steps.length - 1 : steps.length})
+              </h3>
               <div className="grid gap-4">
                 {photos.map((photo, index) => (
                   <div key={index} className="photo-preview">
                     <img 
                       src={photo} 
-                      alt={`Paso ${index + 1}`} 
+                      alt={`${index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}`} 
                       className="rounded-lg shadow-lg w-full max-w-lg mx-auto"
                     />
+                    <p className="text-center text-sm text-gray-500 mt-1">
+                      {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
+                    </p>
                   </div>
                 ))}
               </div>
 
-              {photos.length === steps.length && (
+              {/* Mostrar botón de enviar cuando se hayan completado todos los pasos */}
+              {photos.length === (hasGNC === false ? steps.length - 1 : steps.length) && (
                 <Button
-                  onClick={() => {/* Implement send logic */}}
+                  onClick={() => {
+                    toast({
+                      title: "Enviando fotos",
+                      description: "Las fotos se están enviando al servidor...",
+                    });
+                    // Aquí implementar la lógica de envío
+                    setTimeout(() => {
+                      toast({
+                        title: "¡Éxito!",
+                        description: "Las fotos se han enviado correctamente",
+                        variant: "default",
+                      });
+                    }, 2000);
+                  }}
                   className="w-full py-6 bg-green-600 hover:bg-green-700 text-white"
                 >
                   <Send className="w-5 h-5 mr-2" />
