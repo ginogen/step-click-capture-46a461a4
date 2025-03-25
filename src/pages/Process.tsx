@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin } from "lucide-react";
@@ -29,39 +28,39 @@ const COVERAGE_TYPES = [
   },
 ];
 
-// Imágenes de guía para Responsabilidad Civil
+// Imágenes de guía para Responsabilidad Civil - Fix: Removed 'public/' prefix from image paths
 const GUIDE_IMAGES = {
   responsabilidad_civil: [
     {
-      url: "public/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
+      url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
       title: "ADELANTE",
       instruction: "Corroborar que el vehículo no salga cortado."
     },
     {
-      url: "public/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
+      url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
       title: "ATRAS",
       instruction: "Corroborar que el vehículo no salga cortado."
     },
     {
-      url: "public/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
+      url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
       title: "LATERAL DERECHO",
       instruction: "Corroborar que el vehículo no salga cortado."
     },
     {
-      url: "public/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
+      url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
       title: "LATERAL IZQUIERDO",
       instruction: "Corroborar que el vehículo no salga cortado."
     },
     {
-      url: "public/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
+      url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
       instruction: "Capturar claramente los kilómetros del vehículo."
     }
   ]
 };
 
-// Logo de la empresa
-const COMPANY_LOGO = "public/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
+// Logo de la empresa - Fix: Removed 'public/' prefix from image path
+const COMPANY_LOGO = "/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
 
 // Función para generar pasos basados en tipo de cobertura
 const generateStepsForCoverage = (coverageType) => {
@@ -140,7 +139,7 @@ const Process = () => {
     };
   }, []);
 
-  // Función para obtener la ubicación del usuario
+  // Función para obtener la ubicación del usuario - Improved error handling
   const getUserLocation = () => {
     setIsGettingLocation(true);
     
@@ -158,13 +157,25 @@ const Process = () => {
       },
       (error) => {
         console.error("Error obteniendo ubicación:", error);
-        setUserLocation("Error al obtener ubicación");
+        
+        // Mensajes de error más específicos según el código de error
+        let errorMessage = "Error al obtener ubicación";
+        
+        if (error.code === 1) {
+          errorMessage = "Permiso de ubicación denegado por el usuario";
+        } else if (error.code === 2) {
+          errorMessage = "No se pudo determinar la ubicación";
+        } else if (error.code === 3) {
+          errorMessage = "Tiempo de espera agotado para obtener la ubicación";
+        }
+        
+        setUserLocation(errorMessage);
         setIsGettingLocation(false);
         
         toast({
           variant: "destructive",
           title: "Error de geolocalización",
-          description: "No se pudo acceder a la ubicación. Revisa los permisos de tu navegador."
+          description: errorMessage + ". Las fotos se tomarán sin información de ubicación."
         });
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
