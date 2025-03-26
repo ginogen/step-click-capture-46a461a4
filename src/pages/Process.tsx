@@ -6,18 +6,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-// Definición de tipos de coberturas y sus pasos correspondientes
 const COVERAGE_TYPES = [
-  // Coberturas de automóvil
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 8, // 5 fotos del vehículo + cédula verde + DNI + GNC (opcional)
+    requiredPhotos: 8,
   },
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 3,
+    requiredPhotos: 10,
   },
   {
     id: "terceros_completo",
@@ -29,7 +27,6 @@ const COVERAGE_TYPES = [
     name: "Todo Riesgo",
     requiredPhotos: 6,
   },
-  // Coberturas varias
   {
     id: "edificio_incendio",
     name: "Edificio solo por incendio",
@@ -47,7 +44,6 @@ const COVERAGE_TYPES = [
   },
 ];
 
-// Imágenes de guía para Responsabilidad Civil
 const GUIDE_IMAGES = {
   responsabilidad_civil: [
     {
@@ -75,19 +71,53 @@ const GUIDE_IMAGES = {
       title: "DEL CUENTA KM",
       instruction: "Capturar claramente los kilómetros del vehículo."
     }
+  ],
+  intermedia: [
+    {
+      url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
+      title: "ADELANTE",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
+      title: "ATRAS",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
+      title: "LATERAL DERECHO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
+      title: "LATERAL IZQUIERDO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
+      title: "DEL CUENTA KM",
+      instruction: "Capturar claramente los kilómetros del vehículo."
+    },
+    {
+      url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
+      title: "RUEDA DE CERCA",
+      instruction: "Para que se vea marca y medida. Si no se ve, enviar fotos más de cerca o pasarlo por escrito. Ejemplo: PIRELLI 175/70/R13."
+    },
+    {
+      url: "/lovable-uploads/c5a0af8b-15bf-416a-b95c-b51ff174dffb.png",
+      title: "RUEDA DE AUXILIO",
+      instruction: "Que se vea el detalle de marca y medida de cubierta."
+    }
   ]
 };
 
-// Logo de la empresa
 const COMPANY_LOGO = "/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
 
-// Función para generar pasos basados en tipo de cobertura
 const generateStepsForCoverage = (coverageType) => {
   const { requiredPhotos } = COVERAGE_TYPES.find(
     (type) => type.id === coverageType
   ) || { requiredPhotos: 2 };
   
-  // Si es responsabilidad civil, generar pasos específicos
   if (coverageType === "responsabilidad_civil") {
     const vehiclePhotos = GUIDE_IMAGES.responsabilidad_civil.map((image, index) => ({
       title: `${image.title}`,
@@ -96,7 +126,6 @@ const generateStepsForCoverage = (coverageType) => {
       guideImage: image.url
     }));
     
-    // Agregar pasos adicionales específicos
     return [
       ...vehiclePhotos,
       {
@@ -118,7 +147,35 @@ const generateStepsForCoverage = (coverageType) => {
     ];
   }
   
-  // Para otros tipos de cobertura, generar pasos genéricos
+  if (coverageType === "intermedia") {
+    const vehiclePhotos = GUIDE_IMAGES.intermedia.map((image, index) => ({
+      title: `${image.title}`,
+      instruction: `${image.instruction}`,
+      voiceInstruction: `Por favor, toma la foto ${index + 1}: ${image.title}. ${image.instruction}`,
+      guideImage: image.url
+    }));
+    
+    return [
+      ...vehiclePhotos,
+      {
+        title: "Cédula Verde",
+        instruction: "Toma una foto clara de la cédula verde del vehículo.",
+        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
+      },
+      {
+        title: "DNI",
+        instruction: "Toma una foto de tu DNI (ambos lados).",
+        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
+      },
+      {
+        title: "GNC (si corresponde)",
+        instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
+        voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
+        optional: true
+      }
+    ];
+  }
+  
   return Array.from({ length: requiredPhotos }, (_, index) => ({
     title: `Paso ${index + 1}`,
     instruction: `Captura la foto ${index + 1} siguiendo estas instrucciones...`,
@@ -142,13 +199,11 @@ const Process = () => {
   const { toast } = useToast();
   const conversation = useConversation();
 
-  // Efecto para cargar el tipo de cobertura desde sessionStorage
   useEffect(() => {
     const storedCoverageType = sessionStorage.getItem("coverageType");
     if (storedCoverageType) {
       setCoverageType(storedCoverageType);
     } else {
-      // Si no hay tipo de cobertura seleccionado, redirigir a la selección
       toast({
         variant: "destructive",
         title: "Error",
@@ -158,14 +213,12 @@ const Process = () => {
     }
   }, [navigate, toast]);
 
-  // Efecto para actualizar pasos cuando se selecciona cobertura
   useEffect(() => {
     if (coverageType) {
       setSteps(generateStepsForCoverage(coverageType));
     }
   }, [coverageType]);
 
-  // Cargar imagen de logo
   useEffect(() => {
     const logoImg = new Image();
     logoImg.src = COMPANY_LOGO;
@@ -182,7 +235,6 @@ const Process = () => {
     };
   }, []);
 
-  // Función para solicitar permisos de geolocalización explícitamente
   const requestLocationPermission = () => {
     setIsGettingLocation(true);
     setPermissionDenied(false);
@@ -209,7 +261,6 @@ const Process = () => {
         return;
       }
       
-      // Intentar obtener la ubicación actual
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -263,7 +314,6 @@ const Process = () => {
         videoRef.current.srcObject = stream;
       }
       
-      // Intentar obtener la ubicación cuando se abre la cámara
       if (!permissionDenied) {
         requestLocationPermission();
       } else {
@@ -299,7 +349,7 @@ const Process = () => {
       videoRef.current.srcObject = null;
     }
   };
-  
+
   const handlePhotoCapture = () => {
     if (!videoRef.current) return;
 
@@ -310,24 +360,17 @@ const Process = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Capturar la imagen del video
     ctx.drawImage(video, 0, 0);
 
-    // Agregar marca de agua con fecha, hora y ubicación
     const now = new Date();
-    const watermarkHeight = 60; // Altura de la marca de agua (más alta para incluir ubicación)
-    
-    // Fondo semitransparente para la marca de agua
+    const watermarkHeight = 60;
     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.fillRect(0, canvas.height - watermarkHeight, canvas.width, watermarkHeight);
-    
-    // Texto de la marca de agua
     ctx.fillStyle = 'white';
     ctx.font = '16px Arial';
     ctx.fillText(now.toLocaleString(), 10, canvas.height - 35);
     ctx.fillText(`Ubicación: ${userLocation}`, 10, canvas.height - 15);
-    
-    // Agregar logo de la empresa a la derecha
+
     if (logoRef.current) {
       const logoWidth = 100;
       const logoHeight = 40;
@@ -342,35 +385,33 @@ const Process = () => {
     setShowCamera(false);
     stopCamera();
 
-    // Update: Use sonner toast for smaller, temporary notifications with green background
     sonnerToast(steps[currentStep]?.title + " completado", {
       position: "bottom-center",
-      duration: 1500, // 1.5 seconds
+      duration: 1500,
       className: "text-sm bg-green-500 text-white rounded-md",
     });
 
-    // Manejar el caso especial del paso GNC
-    if (coverageType === "responsabilidad_civil" && currentStep === 6) {
-      // Si estamos en el paso de DNI, preguntar si tiene GNC
+    const isLastPhotoBeforeGNC = 
+      (coverageType === "responsabilidad_civil" && currentStep === 6) ||
+      (coverageType === "intermedia" && currentStep === 8);
+    
+    const isLastPhotoAndNoGNC = 
+      ((coverageType === "responsabilidad_civil" || coverageType === "intermedia") && 
+       currentStep === 7 && 
+       hasGNC === false);
+
+    if (isLastPhotoBeforeGNC) {
       showGNCQuestion();
-    } else if (
-      coverageType === "responsabilidad_civil" && 
-      currentStep === 7 && 
-      hasGNC === false
-    ) {
-      // Si no tiene GNC, saltarse ese paso y finalizar
+    } else if (isLastPhotoAndNoGNC) {
       handleComplete();
     } else if (currentStep < steps.length - 1) {
-      // Avanzar al siguiente paso normalmente
       setCurrentStep(currentStep + 1);
     } else {
-      // Completar el proceso
       handleComplete();
     }
   };
 
   const showGNCQuestion = () => {
-    // Mostrar pregunta sobre GNC con el toast de shadcn (este debe permanecer visible más tiempo)
     toast({
       title: "¿Tu vehículo tiene GNC?",
       description: "Selecciona Sí o No para continuar",
@@ -392,7 +433,7 @@ const Process = () => {
           </Button>
         </div>
       ),
-      duration: 10000, // Duración más larga para que tenga tiempo de responder
+      duration: 10000,
     });
   };
 
@@ -400,22 +441,18 @@ const Process = () => {
     setHasGNC(hasGNCInstalled);
     
     if (hasGNCInstalled) {
-      // Si tiene GNC, continuar al siguiente paso
       setCurrentStep(currentStep + 1);
     } else {
-      // Si no tiene GNC, terminar el proceso
       handleComplete();
     }
   };
 
   const handleComplete = () => {
-    // Use the regular toast for completion message (needs to stay longer)
     toast({
       title: "¡Proceso completado!",
       description: "Todas las fotos han sido capturadas correctamente.",
       variant: "default",
     });
-    // Aquí se podría enviar las fotos al servidor
   };
 
   const handleVoiceInstructions = async () => {
@@ -439,7 +476,6 @@ const Process = () => {
   };
 
   const handleSkipStep = () => {
-    // Solo permitir saltar el paso de GNC si es opcional
     if (steps[currentStep]?.optional) {
       toast({
         title: "Paso omitido",
@@ -458,7 +494,6 @@ const Process = () => {
     navigate("/coverage-selection");
   };
 
-  // Mostrar información de la cobertura seleccionada
   const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
 
   return (
@@ -472,7 +507,6 @@ const Process = () => {
             playsInline
           />
           
-          {/* Indicador de ubicación */}
           <div className="absolute top-4 left-4 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md flex items-center">
             <MapPin className="w-3 h-3 mr-1" />
             {isGettingLocation ? "Obteniendo ubicación..." : userLocation}
@@ -526,7 +560,6 @@ const Process = () => {
             <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
           </div>
 
-          {/* Mostrar imagen de guía si existe para el paso actual */}
           {steps[currentStep]?.guideImage && (
             <div className="flex justify-center my-4">
               <div className="relative border-2 border-black rounded-lg overflow-hidden">
@@ -566,7 +599,6 @@ const Process = () => {
               Instrucciones
             </Button>
 
-            {/* Mostrar botón de ubicación si está denegada */}
             {permissionDenied && (
               <Button
                 onClick={() => requestLocationPermission()}
@@ -578,7 +610,6 @@ const Process = () => {
               </Button>
             )}
 
-            {/* Mostrar botón de omitir solo para pasos opcionales */}
             {steps[currentStep]?.optional && (
               <Button
                 onClick={handleSkipStep}
@@ -610,7 +641,6 @@ const Process = () => {
                 ))}
               </div>
 
-              {/* Mostrar botón de enviar cuando se hayan completado todos los pasos */}
               {photos.length === (hasGNC === false ? steps.length - 1 : steps.length) && (
                 <Button
                   onClick={() => {
@@ -618,7 +648,6 @@ const Process = () => {
                       title: "Enviando fotos",
                       description: "Las fotos se están enviando al servidor...",
                     });
-                    // Aquí implementar la lógica de envío
                     setTimeout(() => {
                       toast({
                         title: "¡Éxito!",
