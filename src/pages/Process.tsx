@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones } from "lucide-react";
@@ -684,7 +683,7 @@ const Process = () => {
     });
   };
 
-  const handleVoiceInstructions = async () => {
+  const handleVoiceInstructions = () => {
     try {
       setIsPlayingVoice(true);
       
@@ -692,34 +691,44 @@ const Process = () => {
       const currentInstruction = steps[currentStep]?.voiceInstruction || 
         `Por favor, toma una foto clara para ${steps[currentStep]?.title}`;
       
+      // Use browser's built-in speech synthesis instead of ElevenLabs
+      const speech = new SpeechSynthesisUtterance(currentInstruction);
+      speech.lang = 'es-ES';
+      speech.rate = 1.0;
+      speech.pitch = 1.0;
+      
+      // Set event handlers
+      speech.onend = () => {
+        setIsPlayingVoice(false);
+      };
+      
+      speech.onerror = (event) => {
+        console.error("Error de síntesis de voz:", event);
+        setIsPlayingVoice(false);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "No se pudieron reproducir las instrucciones por voz"
+        });
+      };
+      
+      // Display toast with instruction text
       toast({
         title: "Reproduciendo instrucciones",
         description: currentInstruction,
       });
       
-      await conversation.startSession({ 
-        agentId: "YOUR_AGENT_ID",
-        overrides: {
-          tts: {
-            voiceId: "EXAVITQu4vr4xnSDxMaL"
-          },
-          agent: {
-            firstMessage: currentInstruction
-          }
-        }
-      });
+      // Play the speech
+      window.speechSynthesis.speak(speech);
       
-      setTimeout(() => {
-        setIsPlayingVoice(false);
-      }, 5000);
     } catch (error) {
-      console.error("Error starting voice conversation:", error);
+      console.error("Error reproduciendo instrucciones por voz:", error);
+      setIsPlayingVoice(false);
       toast({
         variant: "destructive",
         title: "Error",
         description: "No se pudieron reproducir las instrucciones por voz"
       });
-      setIsPlayingVoice(false);
     }
   };
 
