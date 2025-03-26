@@ -18,14 +18,9 @@ const COVERAGE_TYPES = [
     requiredPhotos: 10,
   },
   {
-    id: "terceros_completo",
-    name: "Terceros Completo",
-    requiredPhotos: 4,
-  },
-  {
-    id: "todo_riesgo",
-    name: "Todo Riesgo",
-    requiredPhotos: 6,
+    id: "terceros_completo_todo_riesgo",
+    name: "Terceros Completo / Todo Riesgo",
+    requiredPhotos: 13,
   },
   {
     id: "edificio_incendio",
@@ -108,6 +103,58 @@ const GUIDE_IMAGES = {
       title: "RUEDA DE AUXILIO",
       instruction: "Que se vea el detalle de marca y medida de cubierta."
     }
+  ],
+  terceros_completo_todo_riesgo: [
+    {
+      url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
+      title: "ADELANTE",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
+      title: "ATRAS",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
+      title: "LATERAL DERECHO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
+      title: "LATERAL IZQUIERDO",
+      instruction: "Corroborar que el vehículo no salga cortado."
+    },
+    {
+      url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
+      title: "DEL CUENTA KM",
+      instruction: "Capturar claramente los kilómetros del vehículo."
+    },
+    {
+      url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
+      title: "RUEDA DE CERCA",
+      instruction: "Para que se vea marca y medida. Si no se ve, enviar fotos más de cerca o pasarlo por escrito. Ejemplo: PIRELLI 175/70/R13."
+    },
+    {
+      url: "/lovable-uploads/c5a0af8b-15bf-416a-b95c-b51ff174dffb.png",
+      title: "RUEDA DE AUXILIO",
+      instruction: "Que se vea el detalle de marca y medida de cubierta."
+    },
+    {
+      url: "/lovable-uploads/7721fb43-8d1b-4586-8d9b-01a0043a355b.png",
+      title: "DEL TABLERO",
+      instruction: "Se saca desde la puerta enfocando en diagonal."
+    },
+    {
+      url: "/lovable-uploads/62eccfdc-4004-49e4-8a71-26f0f45ecbf5.png",
+      title: "DEL TECHO EXTERIOR",
+      instruction: "Desde arriba por la cobertura granizo."
+    },
+    {
+      url: "/lovable-uploads/13aeefb2-99b2-40c3-be8e-71867afdc9cb.png",
+      title: "DEL PARABRISAS",
+      instruction: "Desde adentro, por la cobertura Cristales."
+    }
   ]
 };
 
@@ -149,6 +196,35 @@ const generateStepsForCoverage = (coverageType) => {
   
   if (coverageType === "intermedia") {
     const vehiclePhotos = GUIDE_IMAGES.intermedia.map((image, index) => ({
+      title: `${image.title}`,
+      instruction: `${image.instruction}`,
+      voiceInstruction: `Por favor, toma la foto ${index + 1}: ${image.title}. ${image.instruction}`,
+      guideImage: image.url
+    }));
+    
+    return [
+      ...vehiclePhotos,
+      {
+        title: "Cédula Verde",
+        instruction: "Toma una foto clara de la cédula verde del vehículo.",
+        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
+      },
+      {
+        title: "DNI",
+        instruction: "Toma una foto de tu DNI (ambos lados).",
+        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
+      },
+      {
+        title: "GNC (si corresponde)",
+        instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
+        voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
+        optional: true
+      }
+    ];
+  }
+  
+  if (coverageType === "terceros_completo_todo_riesgo") {
+    const vehiclePhotos = GUIDE_IMAGES.terceros_completo_todo_riesgo.map((image, index) => ({
       title: `${image.title}`,
       instruction: `${image.instruction}`,
       voiceInstruction: `Por favor, toma la foto ${index + 1}: ${image.title}. ${image.instruction}`,
@@ -393,12 +469,14 @@ const Process = () => {
 
     const isLastPhotoBeforeGNC = 
       (coverageType === "responsabilidad_civil" && currentStep === 6) ||
-      (coverageType === "intermedia" && currentStep === 8);
+      (coverageType === "intermedia" && currentStep === 8) ||
+      (coverageType === "terceros_completo_todo_riesgo" && currentStep === 11);
     
     const isLastPhotoAndNoGNC = 
-      ((coverageType === "responsabilidad_civil" || coverageType === "intermedia") && 
-       currentStep === 7 && 
-       hasGNC === false);
+      ((coverageType === "responsabilidad_civil" && currentStep === 7) || 
+       (coverageType === "intermedia" && currentStep === 9) ||
+       (coverageType === "terceros_completo_todo_riesgo" && currentStep === 12)) && 
+      hasGNC === false;
 
     if (isLastPhotoBeforeGNC) {
       showGNCQuestion();

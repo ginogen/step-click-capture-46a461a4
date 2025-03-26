@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,14 +16,9 @@ const AUTO_COVERAGE_TYPES = [
     requiredPhotos: 10,
   },
   {
-    id: "terceros_completo",
-    name: "Terceros Completo",
-    requiredPhotos: 4,
-  },
-  {
-    id: "todo_riesgo",
-    name: "Todo Riesgo",
-    requiredPhotos: 6,
+    id: "terceros_completo_todo_riesgo",
+    name: "Terceros Completo / Todo Riesgo",
+    requiredPhotos: 13,
   },
 ];
 
