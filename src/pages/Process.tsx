@@ -687,17 +687,14 @@ const Process = () => {
     try {
       setIsPlayingVoice(true);
       
-      // Get the current step's voice instruction
       const currentInstruction = steps[currentStep]?.voiceInstruction || 
         `Por favor, toma una foto clara para ${steps[currentStep]?.title}`;
       
-      // Use browser's built-in speech synthesis instead of ElevenLabs
       const speech = new SpeechSynthesisUtterance(currentInstruction);
       speech.lang = 'es-ES';
       speech.rate = 1.0;
       speech.pitch = 1.0;
       
-      // Set event handlers
       speech.onend = () => {
         setIsPlayingVoice(false);
       };
@@ -712,13 +709,11 @@ const Process = () => {
         });
       };
       
-      // Display toast with instruction text
       toast({
         title: "Reproduciendo instrucciones",
         description: currentInstruction,
       });
       
-      // Play the speech
       window.speechSynthesis.speak(speech);
       
     } catch (error) {
@@ -757,6 +752,18 @@ const Process = () => {
   };
 
   const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
+
+  const calculateTotalSteps = () => {
+    if (!steps.length) return 0;
+    
+    if (["responsabilidad_civil", "intermedia", "terceros_completo_todo_riesgo"].includes(coverageType)) {
+      return hasGNC === false ? steps.length - 1 : steps.length;
+    }
+    
+    return steps.length;
+  };
+
+  const totalSteps = calculateTotalSteps();
 
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
@@ -819,6 +826,9 @@ const Process = () => {
 
           <div className="text-center mt-6">
             <div className="flex flex-col items-center">
+              <div className="bg-black text-white px-4 py-1 rounded-full text-sm font-bold mb-3">
+                Paso {currentStep + 1}/{totalSteps}
+              </div>
               <h3 className="text-lg font-bold flex items-center gap-2">
                 {steps[currentStep]?.icon && (
                   <span className="text-gray-700">{steps[currentStep]?.icon}</span>
@@ -894,7 +904,7 @@ const Process = () => {
           {photos.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-center">
-                Fotos Capturadas ({photos.length}/{hasGNC === false ? steps.length - 1 : steps.length})
+                Fotos Capturadas ({photos.length}/{totalSteps})
               </h3>
               <div className="grid gap-4">
                 {photos.map((photo, index) => (
@@ -905,13 +915,13 @@ const Process = () => {
                       className="rounded-lg shadow-lg w-full max-w-lg mx-auto"
                     />
                     <p className="text-center text-sm text-gray-500 mt-1">
-                      {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
+                      <span className="font-bold">{index + 1}/{totalSteps}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
                     </p>
                   </div>
                 ))}
               </div>
 
-              {photos.length === (hasGNC === false ? steps.length - 1 : steps.length) && (
+              {photos.length === totalSteps && (
                 <Button
                   onClick={() => {
                     toast({
