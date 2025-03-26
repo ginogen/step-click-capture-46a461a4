@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import Welcome from "./pages/Welcome";
 import Process from "./pages/Process";
 import Auth from "./pages/Auth";
+import CoverageSelection from "./pages/CoverageSelection";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +43,7 @@ const App = () => {
             path="/"
             element={
               isAuthenticated ? (
-                <Navigate to="/process" replace />
+                <Navigate to="/coverage-selection" replace />
               ) : (
                 <Welcome />
               )
@@ -52,9 +53,19 @@ const App = () => {
             path="/auth"
             element={
               isAuthenticated ? (
-                <Navigate to="/process" replace />
+                <Navigate to="/coverage-selection" replace />
               ) : (
                 <Auth />
+              )
+            }
+          />
+          <Route
+            path="/coverage-selection"
+            element={
+              isAuthenticated ? (
+                <CoverageSelection />
+              ) : (
+                <Navigate to="/auth" replace />
               )
             }
           />

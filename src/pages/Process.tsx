@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 // Definición de tipos de coberturas y sus pasos correspondientes
 const COVERAGE_TYPES = [
+  // Coberturas de automóvil
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
@@ -25,6 +27,22 @@ const COVERAGE_TYPES = [
     id: "todo_riesgo",
     name: "Todo Riesgo",
     requiredPhotos: 6,
+  },
+  // Coberturas varias
+  {
+    id: "edificio_incendio",
+    name: "Edificio solo por incendio",
+    requiredPhotos: 6,
+  },
+  {
+    id: "combinado_integral",
+    name: "Combinado o integral",
+    requiredPhotos: 10,
+  },
+  {
+    id: "otros",
+    name: "Otros",
+    requiredPhotos: 10,
   },
 ];
 
@@ -108,9 +126,7 @@ const generateStepsForCoverage = (coverageType) => {
 };
 
 const Process = () => {
-  const [started, setStarted] = useState(false);
-  const [coverageSelected, setCoverageSelected] = useState(false);
-  const [coverageType, setCoverageType] = useState("");
+  const navigate = useNavigate();
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
@@ -119,10 +135,27 @@ const Process = () => {
   const [userLocation, setUserLocation] = useState<string>("Ubicación no disponible");
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [permissionDenied, setPermissionDenied] = useState(false);
+  const [coverageType, setCoverageType] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
   const conversation = useConversation();
+
+  // Efecto para cargar el tipo de cobertura desde sessionStorage
+  useEffect(() => {
+    const storedCoverageType = sessionStorage.getItem("coverageType");
+    if (storedCoverageType) {
+      setCoverageType(storedCoverageType);
+    } else {
+      // Si no hay tipo de cobertura seleccionado, redirigir a la selección
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Por favor, selecciona un tipo de cobertura primero"
+      });
+      navigate("/coverage-selection");
+    }
+  }, [navigate, toast]);
 
   // Efecto para actualizar pasos cuando se selecciona cobertura
   useEffect(() => {
@@ -266,19 +299,6 @@ const Process = () => {
     }
   };
   
-  const handleStartProcess = () => {
-    setStarted(true);
-  };
-
-  const handleCoverageSelect = (coverage) => {
-    setCoverageType(coverage);
-    setCoverageSelected(true);
-    toast({
-      title: "Cobertura seleccionada",
-      description: `Has elegido la cobertura: ${COVERAGE_TYPES.find(type => type.id === coverage)?.name}`
-    });
-  };
-
   const handlePhotoCapture = () => {
     if (!videoRef.current) return;
 
@@ -431,46 +451,12 @@ const Process = () => {
     }
   };
 
-  if (!started) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <Button
-          onClick={handleStartProcess}
-          className="text-xl py-8 px-12 bg-black hover:bg-gray-800 text-white"
-        >
-          Comenzar Proceso
-        </Button>
-      </div>
-    );
-  }
+  const handleChangeCoverage = () => {
+    navigate("/coverage-selection");
+  };
 
-  // Mostrar selección de cobertura si aún no se ha seleccionado
-  if (started && !coverageSelected) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-gray-50 to-gray-100">
-        <div className="max-w-lg mx-auto text-center mb-8">
-          <h2 className="text-2xl font-bold mb-4">Selecciona tu tipo de cobertura</h2>
-          <p className="text-gray-600">El tipo de cobertura determinará cuántas fotos necesitarás tomar.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg">
-          {COVERAGE_TYPES.map((coverage) => (
-            <Button
-              key={coverage.id}
-              onClick={() => handleCoverageSelect(coverage.id)}
-              className="py-6 bg-white hover:bg-gray-100 text-black border border-gray-300 transition-all duration-200"
-              variant="outline"
-            >
-              <div className="flex flex-col items-center">
-                <span className="font-medium">{coverage.name}</span>
-                <span className="text-sm text-gray-500 mt-1">{coverage.requiredPhotos} fotos</span>
-              </div>
-            </Button>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  // Mostrar información de la cobertura seleccionada
+  const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
 
   return (
     <div className="min-h-screen p-4 bg-gradient-to-b from-gray-50 to-gray-100">
@@ -489,7 +475,7 @@ const Process = () => {
             {isGettingLocation ? "Obteniendo ubicación..." : userLocation}
             {permissionDenied && (
               <Button 
-                onClick={requestLocationPermission}
+                onClick={() => requestLocationPermission()}
                 variant="link" 
                 className="text-xs text-white p-0 ml-1 h-auto"
               >
@@ -507,8 +493,33 @@ const Process = () => {
         </div>
       ) : (
         <div className="space-y-6">
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
+              alt="Grupo Cazalá Seguros" 
+              className="h-16 object-contain"
+            />
+          </div>
+          
           <div className="text-center">
-            <h2 className="text-2xl font-bold">{steps[currentStep]?.title}</h2>
+            <h2 className="text-xl font-semibold mb-1">
+              {selectedCoverage?.name || "Cobertura"}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {selectedCoverage?.requiredPhotos} fotos requeridas
+            </p>
+            <Button
+              onClick={handleChangeCoverage}
+              variant="outline"
+              className="mt-2 text-xs"
+              size="sm"
+            >
+              Cambiar cobertura
+            </Button>
+          </div>
+
+          <div className="text-center mt-6">
+            <h3 className="text-lg font-bold">{steps[currentStep]?.title}</h3>
             <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
           </div>
 
@@ -555,7 +566,7 @@ const Process = () => {
             {/* Mostrar botón de ubicación si está denegada */}
             {permissionDenied && (
               <Button
-                onClick={requestLocationPermission}
+                onClick={() => requestLocationPermission()}
                 variant="ghost"
                 className="text-gray-500 hover:text-gray-800"
               >
