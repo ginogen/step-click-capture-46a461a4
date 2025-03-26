@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/components/ui/use-toast";
+import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 // Definición de tipos de coberturas y sus pasos correspondientes
@@ -341,10 +342,11 @@ const Process = () => {
     setShowCamera(false);
     stopCamera();
 
-    // Mostrar el mensaje correcto para el paso actual
-    toast({
-      title: "¡Foto capturada!",
-      description: `${steps[currentStep]?.title} completado`
+    // Update: Use sonner toast for smaller, temporary notifications
+    sonnerToast(steps[currentStep]?.title + " completado", {
+      position: "bottom-center",
+      duration: 1500, // 1.5 seconds
+      className: "text-sm",
     });
 
     // Manejar el caso especial del paso GNC
@@ -368,7 +370,7 @@ const Process = () => {
   };
 
   const showGNCQuestion = () => {
-    // Mostrar pregunta sobre GNC
+    // Mostrar pregunta sobre GNC con el toast de shadcn (este debe permanecer visible más tiempo)
     toast({
       title: "¿Tu vehículo tiene GNC?",
       description: "Selecciona Sí o No para continuar",
@@ -407,6 +409,7 @@ const Process = () => {
   };
 
   const handleComplete = () => {
+    // Use the regular toast for completion message (needs to stay longer)
     toast({
       title: "¡Proceso completado!",
       description: "Todas las fotos han sido capturadas correctamente.",

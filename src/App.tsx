@@ -1,5 +1,5 @@
-
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -82,6 +82,15 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      {/* Add Sonner Toaster component for small transient notifications */}
+      <SonnerToaster 
+        position="bottom-center"
+        toastOptions={{
+          duration: 1500,
+          className: "text-sm py-2 px-3",
+        }}
+      />
+      {/* Keep existing Toaster for important notifications */}
       <Toaster />
     </QueryClientProvider>
   );
