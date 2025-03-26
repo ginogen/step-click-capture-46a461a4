@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
 
 const COVERAGE_TYPES = [
   {
@@ -392,6 +400,8 @@ const Process = () => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [coverageType, setCoverageType] = useState("");
+  const [currentPhotoData, setCurrentPhotoData] = useState<string | null>(null);
+  const [showPhotoConfirmDialog, setShowPhotoConfirmDialog] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -579,9 +589,20 @@ const Process = () => {
     }
 
     const photoData = canvas.toDataURL('image/jpeg');
-    setPhotos([...photos, photoData]);
-    setShowCamera(false);
+    
+    setCurrentPhotoData(photoData);
+    setShowPhotoConfirmDialog(true);
+    
     stopCamera();
+    setShowCamera(false);
+  };
+
+  const confirmPhoto = () => {
+    if (!currentPhotoData) return;
+    
+    setPhotos([...photos, currentPhotoData]);
+    setCurrentPhotoData(null);
+    setShowPhotoConfirmDialog(false);
 
     sonnerToast(steps[currentStep]?.title + " completado", {
       position: "bottom-center",
@@ -609,6 +630,12 @@ const Process = () => {
     } else {
       handleComplete();
     }
+  };
+
+  const rejectPhoto = () => {
+    setCurrentPhotoData(null);
+    setShowPhotoConfirmDialog(false);
+    handleOpenCamera();
   };
 
   const showGNCQuestion = () => {
@@ -873,6 +900,47 @@ const Process = () => {
           )}
         </div>
       )}
+
+      <Dialog open={showPhotoConfirmDialog} onOpenChange={setShowPhotoConfirmDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿La foto se tomó correctamente?</DialogTitle>
+            <DialogDescription>
+              Verifica que la imagen sea clara y cumpla con los requisitos
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            {currentPhotoData && (
+              <img 
+                src={currentPhotoData} 
+                alt="Foto capturada" 
+                className="rounded-lg shadow-md w-full"
+              />
+            )}
+          </div>
+          
+          <DialogFooter className="flex flex-row justify-between sm:justify-between gap-2">
+            <Button 
+              type="button" 
+              variant="destructive" 
+              onClick={rejectPhoto}
+              className="flex-1"
+            >
+              <X className="w-4 h-4 mr-2" />
+              No, volver a tomar
+            </Button>
+            <Button 
+              type="button" 
+              onClick={confirmPhoto}
+              className="flex-1 bg-green-600 hover:bg-green-700"
+            >
+              <Check className="w-4 h-4 mr-2" />
+              Sí, continuar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
