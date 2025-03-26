@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator } from "lucide-react";
 import { useConversation } from "@11labs/react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -158,6 +158,111 @@ const GUIDE_IMAGES = {
   ]
 };
 
+const BUILDING_INSTRUCTIONS = {
+  edificio_incendio: [
+    {
+      title: "FRENTE DEL EDIFICIO",
+      instruction: "Donde se vea todo el frente completo",
+      voiceInstruction: "Por favor, toma una foto donde se vea todo el frente completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "FONDO DEL EDIFICIO",
+      instruction: "Donde se vea todo el fondo completo",
+      voiceInstruction: "Ahora, toma una foto donde se vea todo el fondo completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "LATERAL IZQUIERDO",
+      instruction: "Donde se vea todo el lateral completo",
+      voiceInstruction: "Toma una foto donde se vea todo el lateral izquierdo completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "LATERAL DERECHO",
+      instruction: "Donde se vea todo el lateral completo",
+      voiceInstruction: "Toma una foto donde se vea todo el lateral derecho completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "TABLERO ELÉCTRICO",
+      instruction: "Captura claramente todo el tablero eléctrico",
+      voiceInstruction: "Ahora toma una foto donde se vea claramente el tablero eléctrico.",
+      icon: <BellElectric className="w-5 h-5" />
+    },
+    {
+      title: "MATAFUEGO",
+      instruction: "Si lo hubiera, toma una foto clara del matafuego",
+      voiceInstruction: "Si hay matafuego o extintor, toma una foto clara del mismo. Si no hay, puedes omitir este paso.",
+      icon: <FireExtinguisher className="w-5 h-5" />,
+      optional: true
+    }
+  ],
+  combinado_integral: [
+    {
+      title: "FRENTE DEL EDIFICIO",
+      instruction: "Donde se vea todo el frente completo",
+      voiceInstruction: "Por favor, toma una foto donde se vea todo el frente completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "FONDO DEL EDIFICIO",
+      instruction: "Donde se vea todo el fondo completo",
+      voiceInstruction: "Ahora, toma una foto donde se vea todo el fondo completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "LATERAL IZQUIERDO",
+      instruction: "Donde se vea todo el lateral completo",
+      voiceInstruction: "Toma una foto donde se vea todo el lateral izquierdo completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "LATERAL DERECHO",
+      instruction: "Donde se vea todo el lateral completo",
+      voiceInstruction: "Toma una foto donde se vea todo el lateral derecho completo del edificio.",
+      icon: <Camera className="w-5 h-5" />
+    },
+    {
+      title: "TABLERO ELÉCTRICO",
+      instruction: "Captura claramente todo el tablero eléctrico",
+      voiceInstruction: "Ahora toma una foto donde se vea claramente el tablero eléctrico.",
+      icon: <BellElectric className="w-5 h-5" />
+    },
+    {
+      title: "MATAFUEGO",
+      instruction: "Si lo hubiera, toma una foto clara del matafuego",
+      voiceInstruction: "Si hay matafuego o extintor, toma una foto clara del mismo. Si no hay, puedes omitir este paso.",
+      icon: <FireExtinguisher className="w-5 h-5" />,
+      optional: true
+    },
+    {
+      title: "HELADERA",
+      instruction: "Que se vea que está encendida y funcionando",
+      voiceInstruction: "Toma una foto de la heladera donde se pueda ver que está encendida y funcionando.",
+      icon: <Refrigerator className="w-5 h-5" />
+    },
+    {
+      title: "TV 1",
+      instruction: "Que se vea que está encendido y funcionando",
+      voiceInstruction: "Toma una foto del primer televisor donde se pueda ver que está encendido y funcionando.",
+      icon: <Tv className="w-5 h-5" />
+    },
+    {
+      title: "TV 2",
+      instruction: "Que se vea que está encendido y funcionando",
+      voiceInstruction: "Toma una foto del segundo televisor donde se pueda ver que está encendido y funcionando.",
+      icon: <Tv className="w-5 h-5" />
+    },
+    {
+      title: "COMPUTADORA",
+      instruction: "Que se vea que está encendida y funcionando",
+      voiceInstruction: "Toma una foto de la computadora donde se pueda ver que está encendida y funcionando.",
+      icon: <Computer className="w-5 h-5" />
+    }
+  ]
+};
+
 const COMPANY_LOGO = "/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
 
 const generateStepsForCoverage = (coverageType) => {
@@ -251,11 +356,28 @@ const generateStepsForCoverage = (coverageType) => {
       }
     ];
   }
+
+  if (coverageType === "edificio_incendio") {
+    return BUILDING_INSTRUCTIONS.edificio_incendio;
+  }
+
+  if (coverageType === "combinado_integral") {
+    return BUILDING_INSTRUCTIONS.combinado_integral;
+  }
+  
+  if (coverageType === "otros") {
+    return Array.from({ length: requiredPhotos }, (_, index) => ({
+      title: `Foto ${index + 1}`,
+      instruction: `Captura la foto ${index + 1}`,
+      voiceInstruction: `Por favor, toma la foto número ${index + 1}.`,
+      icon: <Camera className="w-5 h-5" />
+    }));
+  }
   
   return Array.from({ length: requiredPhotos }, (_, index) => ({
     title: `Paso ${index + 1}`,
-    instruction: `Captura la foto ${index + 1} siguiendo estas instrucciones...`,
-    voiceInstruction: `Por favor, toma la foto ${index + 1} siguiendo estas instrucciones...`
+    instruction: `Captura la foto ${index + 1}`,
+    voiceInstruction: `Por favor, toma la foto ${index + 1}.`
   }));
 };
 
@@ -634,8 +756,15 @@ const Process = () => {
           </div>
 
           <div className="text-center mt-6">
-            <h3 className="text-lg font-bold">{steps[currentStep]?.title}</h3>
-            <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                {steps[currentStep]?.icon && (
+                  <span className="text-gray-700">{steps[currentStep]?.icon}</span>
+                )}
+                {steps[currentStep]?.title}
+              </h3>
+              <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
+            </div>
           </div>
 
           {steps[currentStep]?.guideImage && (
