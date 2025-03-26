@@ -342,11 +342,11 @@ const Process = () => {
     setShowCamera(false);
     stopCamera();
 
-    // Update: Use sonner toast for smaller, temporary notifications
+    // Update: Use sonner toast for smaller, temporary notifications with green background
     sonnerToast(steps[currentStep]?.title + " completado", {
       position: "bottom-center",
       duration: 1500, // 1.5 seconds
-      className: "text-sm",
+      className: "text-sm bg-green-500 text-white rounded-md",
     });
 
     // Manejar el caso especial del paso GNC

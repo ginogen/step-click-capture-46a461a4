@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -87,7 +88,7 @@ const App = () => {
         position="bottom-center"
         toastOptions={{
           duration: 1500,
-          className: "text-sm py-2 px-3",
+          className: "text-sm py-2 px-3 bg-green-500 text-white rounded-md",
         }}
       />
       {/* Keep existing Toaster for important notifications */}
