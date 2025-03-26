@@ -1,6 +1,7 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones } from "lucide-react";
 import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
@@ -402,6 +403,7 @@ const Process = () => {
   const [coverageType, setCoverageType] = useState("");
   const [currentPhotoData, setCurrentPhotoData] = useState<string | null>(null);
   const [showPhotoConfirmDialog, setShowPhotoConfirmDialog] = useState(false);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -684,16 +686,40 @@ const Process = () => {
 
   const handleVoiceInstructions = async () => {
     try {
+      setIsPlayingVoice(true);
+      
+      // Get the current step's voice instruction
+      const currentInstruction = steps[currentStep]?.voiceInstruction || 
+        `Por favor, toma una foto clara para ${steps[currentStep]?.title}`;
+      
+      toast({
+        title: "Reproduciendo instrucciones",
+        description: currentInstruction,
+      });
+      
       await conversation.startSession({ 
         agentId: "YOUR_AGENT_ID",
         overrides: {
           tts: {
             voiceId: "EXAVITQu4vr4xnSDxMaL"
+          },
+          agent: {
+            firstMessage: currentInstruction
           }
         }
       });
+      
+      setTimeout(() => {
+        setIsPlayingVoice(false);
+      }, 5000);
     } catch (error) {
       console.error("Error starting voice conversation:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudieron reproducir las instrucciones por voz"
+      });
+      setIsPlayingVoice(false);
     }
   };
 
@@ -828,9 +854,10 @@ const Process = () => {
               onClick={handleVoiceInstructions}
               variant="outline"
               className="border-black text-black hover:bg-gray-100"
+              disabled={isPlayingVoice}
             >
-              <HelpCircle className="w-5 h-5 mr-2" />
-              Instrucciones
+              <Headphones className="w-5 h-5 mr-2" />
+              {isPlayingVoice ? "Reproduciendo..." : "Instrucciones por Voz"}
             </Button>
 
             {permissionDenied && (
