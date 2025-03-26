@@ -12,7 +12,7 @@ const Welcome = () => {
           <img 
             src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
             alt="Grupo Cazalá Seguros" 
-            className="h-24 object-contain"
+            className="h-20 object-contain"
           />
         </div>
         

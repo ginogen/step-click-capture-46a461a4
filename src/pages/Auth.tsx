@@ -55,7 +55,12 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
       <div className="w-full max-w-md space-y-8 bg-white p-6 rounded-xl shadow-lg">
-        <div className="text-center">
+        <div className="flex flex-col items-center">
+          <img 
+            src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
+            alt="Grupo Cazalá Seguros" 
+            className="h-16 object-contain mb-4"
+          />
           <h2 className="text-2xl font-bold">
             {mode === "signin" ? "Iniciar Sesión" : "Crear Cuenta"}
           </h2>
