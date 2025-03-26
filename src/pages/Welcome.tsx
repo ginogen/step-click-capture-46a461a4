@@ -8,33 +8,23 @@ const Welcome = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="w-full max-w-md space-y-8 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-          Bienvenido a PhotoProcess
-        </h1>
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
+            alt="Grupo Cazalá Seguros" 
+            className="h-24 object-contain"
+          />
+        </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           <p className="text-lg text-gray-600">
-            Esta aplicación te guiará a través de un proceso de 6 pasos para capturar fotografías específicas.
+            A continuación podes elegir el tipo de póliza y te indicaremos como tomar las fotos correctamente para asegurarnos que la póliza sea aprobada debidamente.
           </p>
           
-          <ul className="text-left text-gray-600 space-y-2 mt-4">
-            <li className="flex items-center">
-              <span className="mr-2">•</span>
-              Instrucciones claras en cada paso
-            </li>
-            <li className="flex items-center">
-              <span className="mr-2">•</span>
-              Guía por voz opcional
-            </li>
-            <li className="flex items-center">
-              <span className="mr-2">•</span>
-              Vista previa de fotos con marca de agua
-            </li>
-            <li className="flex items-center">
-              <span className="mr-2">•</span>
-              Proceso simple y guiado
-            </li>
-          </ul>
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 text-blue-700">
+            <p className="font-medium">Importante:</p>
+            <p>En el caso de pólizas para vehículos, Por favor, antes de tomar las fotos, estacione el vehículo en un lugar despejado, lejos de paredes u objetos que puedan obstruir la vista. Capture todas las imágenes necesarias sin mover el vehículo. ¡Gracias!</p>
+          </div>
         </div>
 
         <div className="mt-8">
