@@ -14,7 +14,7 @@ const AUTO_COVERAGE_TYPES = [
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 3,
+    requiredPhotos: 10,
   },
   {
     id: "terceros_completo",
