@@ -746,6 +746,9 @@ const Process = () => {
     handleOpenCamera();
   };
 
+  const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
+  const totalSteps = calculateTotalSteps();
+
   return (
     <div className="min-h-screen p-2 sm:p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
@@ -793,7 +796,7 @@ const Process = () => {
           </div>
           
           <div className="text-center">
-            <h1 className="text-xl sm:text-2xl font-bold mb-1 text-gray-800">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">
               {selectedCoverage?.name || "Cobertura"}
             </h1>
             <p className="text-sm sm:text-base text-gray-600 font-medium mb-2">
@@ -802,19 +805,13 @@ const Process = () => {
             <Button
               onClick={handleChangeCoverage}
               variant="outline"
-              className="mt-1 text-xs px-1 py-0.5 h-6"
+              className="mt-1 text-xs px-1 py-0.5 h-5"
               size="sm"
             >
               Cambiar
             </Button>
           </div>
 
-          <Stepper 
-            steps={totalSteps} 
-            currentStep={currentStep} 
-          />
-
-          <div className="text-center mt-4 sm:mt-6">
-            <div className="flex flex-col items-center">
-              <div className="w-full max-w-md mb-3">
-                <h2
+          <div className="w-full max-w-3xl mx-auto mb-4">
+            <div className="flex justify-center items-center">
+              <div className="px-4 py-
