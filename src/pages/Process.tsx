@@ -12,6 +12,7 @@ import {
   DialogDescription,
   DialogFooter
 } from "@/components/ui/dialog";
+import { Stepper } from "@/components/ui/stepper";
 
 const COVERAGE_TYPES = [
   {
@@ -698,6 +699,17 @@ const Process = () => {
 
   const totalSteps = calculateTotalSteps();
 
+  const getStepperLabels = () => {
+    if (steps.length <= 6) {
+      return steps.map(step => step.title);
+    }
+    
+    return Array.from({ length: Math.min(6, totalSteps) }, (_, i) => {
+      const stepIndex = Math.floor(i * (steps.length / Math.min(6, totalSteps)));
+      return steps[stepIndex]?.title || `Paso ${i + 1}`;
+    });
+  };
+
   return (
     <div className="min-h-screen p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
@@ -760,11 +772,14 @@ const Process = () => {
             </Button>
           </div>
 
+          <Stepper 
+            steps={Math.min(6, totalSteps)} 
+            currentStep={Math.min(currentStep, 5)} 
+            labels={getStepperLabels()}
+          />
+
           <div className="text-center mt-6">
             <div className="flex flex-col items-center">
-              <div className="bg-black text-white px-4 py-1 rounded-full text-sm font-bold mb-3">
-                Paso {currentStep + 1}/{totalSteps}
-              </div>
               <h3 className="text-lg font-bold flex items-center gap-2">
                 {steps[currentStep]?.icon && (
                   <span className="text-gray-700">{steps[currentStep]?.icon}</span>
