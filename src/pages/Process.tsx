@@ -425,7 +425,7 @@ const Process = () => {
     }
     
     navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
-      console.log("Estado del permiso de geolocalización:", permissionStatus.state);
+      console.log("Estado del permiso de geolocalizaci��n:", permissionStatus.state);
       
       if (permissionStatus.state === 'denied') {
         setPermissionDenied(true);
@@ -814,7 +814,7 @@ const Process = () => {
                   }}
                 />
                 
-                <div className="absolute top-0 right-0 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-bl-md">
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-tr-md">
                   FOTO DE EJEMPLO
                 </div>
               </div>
