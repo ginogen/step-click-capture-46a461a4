@@ -726,10 +726,10 @@ const Process = () => {
           <div className="fixed bottom-10 inset-x-0 flex justify-center z-50">
             <Button
               onClick={handlePhotoCapture}
-              className="w-20 h-20 rounded-full bg-white text-black hover:bg-gray-100 shadow-lg"
+              className="w-24 h-24 rounded-full bg-white text-black hover:bg-gray-100 shadow-lg border-4 border-black"
               size="icon"
             >
-              <Camera className="w-10 h-10" />
+              <Camera className="w-12 h-12" />
             </Button>
           </div>
         </div>
@@ -771,7 +771,11 @@ const Process = () => {
                 )}
                 {steps[currentStep]?.title}
               </h3>
-              <p className="text-gray-600 mt-2">{steps[currentStep]?.instruction}</p>
+              
+              <div className="mt-4 p-3 bg-gray-100 rounded-lg w-full max-w-md">
+                <p className="font-bold text-left mb-2">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left">{steps[currentStep]?.instruction}</p>
+              </div>
             </div>
           </div>
 
@@ -810,10 +814,10 @@ const Process = () => {
               
               <Button
                 onClick={handleOpenCamera}
-                className="w-16 h-16 rounded-full bg-black hover:bg-gray-800 text-white"
+                className="w-20 h-20 rounded-full bg-black hover:bg-gray-800 text-white border-4 border-gray-300"
                 size="icon"
               >
-                <Camera className="w-8 h-8" />
+                <Camera className="w-10 h-10" />
               </Button>
 
               {steps[currentStep]?.optional && (
