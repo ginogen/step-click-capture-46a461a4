@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images } from "lucide-react";
@@ -773,9 +772,11 @@ const Process = () => {
                 {steps[currentStep]?.title}
               </h3>
               
-              <div className="mt-4 p-3 bg-gray-100 rounded-lg w-full max-w-md">
+              <div className="mt-4 p-4 bg-gray-100 rounded-lg w-full max-w-md border border-gray-300 shadow-sm">
                 <p className="font-bold text-left mb-2">Instrucciones para tomar la foto:</p>
-                <p className="text-gray-700 text-left">{steps[currentStep]?.instruction}</p>
+                <p className="text-gray-700 text-left p-3 bg-gray-200 rounded border border-gray-200">
+                  {steps[currentStep]?.instruction}
+                </p>
               </div>
             </div>
           </div>
