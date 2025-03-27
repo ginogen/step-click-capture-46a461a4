@@ -1,6 +1,7 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -812,12 +813,23 @@ const Process = () => {
             <Button
               onClick={handleVoiceInstructions}
               variant="outline"
-              className="w-full h-10 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="w-full h-10 mb-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
               disabled={isPlayingVoice}
             >
               <Headphones className="w-5 h-5 mr-2" />
               Instrucciones por Voz
             </Button>
+
+            {photos.length > 0 && (
+              <Button
+                onClick={() => setShowPhotoGallery(true)}
+                variant="outline"
+                className="w-full h-10 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
+              >
+                <Images className="w-5 h-5 mr-2" />
+                Ver Fotos Tomadas ({photos.length}/{totalSteps})
+              </Button>
+            )}
 
             {steps[currentStep]?.optional && (
               <Button
@@ -831,18 +843,6 @@ const Process = () => {
               </Button>
             )}
           </div>
-
-          {photos.length > 0 && !showPhotoGallery && (
-            <div className="mt-16 pt-8 border-t border-gray-200">
-              <Button
-                onClick={() => setShowPhotoGallery(true)}
-                variant="outline"
-                className="w-full"
-              >
-                Ver fotos tomadas ({photos.length}/{totalSteps})
-              </Button>
-            </div>
-          )}
         </div>
       )}
 
