@@ -813,6 +813,10 @@ const Process = () => {
                     });
                   }}
                 />
+                
+                <div className="absolute top-0 right-0 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-bl-md">
+                  FOTO DE EJEMPLO
+                </div>
               </div>
             </div>
           )}

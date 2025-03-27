@@ -19,7 +19,7 @@ export function Stepper({ steps, currentStep, labels }: StepperProps) {
             <div 
               className={cn(
                 "rounded-full flex items-center justify-center text-xs font-medium transition-colors",
-                isMobile ? "w-7 h-7" : "w-9 h-9",
+                isMobile ? "w-6 h-6" : "w-9 h-9",
                 i < currentStep 
                   ? "bg-green-400 text-white" 
                   : i === currentStep 
@@ -50,7 +50,7 @@ export function Stepper({ steps, currentStep, labels }: StepperProps) {
               key={i} 
               className={cn(
                 "font-medium text-center truncate",
-                isMobile ? "text-[10px] max-w-[60px]" : "text-xs max-w-[80px]",
+                isMobile ? "text-[10px] max-w-[50px]" : "text-xs max-w-[80px]",
                 i === currentStep ? "text-gray-900" : "text-gray-500"
               )}
             >
