@@ -375,6 +375,7 @@ const Process = () => {
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [photoToRetakeIndex, setPhotoToRetakeIndex] = useState<number | null>(null);
+  const [locationReceived, setLocationReceived] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -418,6 +419,7 @@ const Process = () => {
   const requestLocationPermission = () => {
     setIsGettingLocation(true);
     setPermissionDenied(false);
+    setLocationReceived(false);
     
     if (!navigator.geolocation) {
       setUserLocation("Geolocalización no soportada en este dispositivo");
@@ -426,7 +428,7 @@ const Process = () => {
     }
     
     navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
-      console.log("Estado del permiso de geolocalizaci��n:", permissionStatus.state);
+      console.log("Estado del permiso de geolocalización:", permissionStatus.state);
       
       if (permissionStatus.state === 'denied') {
         setPermissionDenied(true);
@@ -447,6 +449,7 @@ const Process = () => {
           setUserLocation(`Lat: ${latitude.toFixed(6)}, Long: ${longitude.toFixed(6)}`);
           setIsGettingLocation(false);
           setPermissionDenied(false);
+          setLocationReceived(true);
         },
         (error) => {
           console.error("Error obteniendo ubicación:", error);
@@ -532,6 +535,24 @@ const Process = () => {
 
   const handlePhotoCapture = () => {
     if (!videoRef.current) return;
+    
+    if (!locationReceived && !permissionDenied && !isGettingLocation) {
+      toast({
+        variant: "destructive",
+        title: "Ubicación requerida",
+        description: "Espera a que se obtenga tu ubicación antes de tomar la foto.",
+      });
+      return;
+    }
+    
+    if (isGettingLocation) {
+      toast({
+        variant: "destructive",
+        title: "Espera un momento",
+        description: "Obteniendo ubicación...",
+      });
+      return;
+    }
 
     const canvas = document.createElement('canvas');
     const video = videoRef.current;
@@ -755,6 +776,7 @@ const Process = () => {
               onClick={handlePhotoCapture}
               className="w-24 h-24 rounded-full bg-white text-black hover:bg-gray-100 shadow-lg border-4 border-black"
               size="icon"
+              disabled={isGettingLocation && !locationReceived && !permissionDenied}
             >
               <Camera className="w-12 h-12" />
             </Button>
@@ -780,7 +802,7 @@ const Process = () => {
             <Button
               onClick={handleChangeCoverage}
               variant="outline"
-              className="mt-1 text-xs px-2 py-1 h-auto"
+              className="mt-1 text-xs px-1.5 py-0.5 h-7"
               size="sm"
             >
               Cambiar cobertura
@@ -788,9 +810,8 @@ const Process = () => {
           </div>
 
           <Stepper 
-            steps={Math.min(6, totalSteps)} 
-            currentStep={Math.min(currentStep, 5)} 
-            labels={getStepperLabels()}
+            steps={totalSteps} 
+            currentStep={currentStep} 
           />
 
           <div className="text-center mt-4 sm:mt-6">
