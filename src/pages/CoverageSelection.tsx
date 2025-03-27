@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -77,17 +76,14 @@ const CoverageSelection = () => {
       description: `Has elegido la cobertura: ${coverageItem?.name}`
     });
     
-    if (coverage.startsWith("responsabilidad") || coverage.startsWith("intermedia") || coverage.startsWith("terceros")) {
-      setSelectedCoverage(coverage);
-      setShowAutoModal(true);
-    } else {
-      // Para coberturas no relacionadas con vehículos, navegar directamente
-      navigate("/process");
-    }
+    navigate("/process");
   };
 
-  const continueToProcess = () => {
-    navigate("/process");
+  const continueToAutoCoberages = () => {
+    // Close the modal and keep the auto category selected
+    setShowAutoModal(false);
+    // Keep the auto category selected to show the auto coverage options
+    // No need to reset selectedCategory here
   };
 
   return (
@@ -193,7 +189,7 @@ const CoverageSelection = () => {
           </DialogHeader>
           <DialogFooter>
             <Button 
-              onClick={continueToProcess} 
+              onClick={continueToAutoCoberages} 
               className="w-full"
             >
               Entendido, continuar
