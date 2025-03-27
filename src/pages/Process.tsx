@@ -712,8 +712,38 @@ const Process = () => {
     navigate("/coverage-selection");
   };
 
+  const handleRetakePhoto = (index: number) => {
+    setPhotoToRetakeIndex(index);
+    setShowPhotoGallery(false);
+    handleOpenCamera();
+  };
+
+  const calculateTotalSteps = () => {
+    if (!steps.length) return 0;
+    
+    if (["responsabilidad_civil", "intermedia", "terceros_completo_todo_riesgo"].includes(coverageType)) {
+      if (hasGNC === false) {
+        return steps.length - 1;
+      }
+      return steps.length;
+    }
+    
+    return steps.length;
+  };
+
   const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
   const totalSteps = calculateTotalSteps();
+
+  const getStepperLabels = () => {
+    if (steps.length <= 6) {
+      return steps.map(step => step.title);
+    }
+    
+    return Array.from({ length: Math.min(6, totalSteps) }, (_, i) => {
+      const stepIndex = Math.floor(i * (steps.length / Math.min(6, totalSteps)));
+      return steps[stepIndex]?.title || `Paso ${i + 1}`;
+    });
+  };
 
   return (
     <div className="min-h-screen p-2 sm:p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
@@ -778,13 +808,10 @@ const Process = () => {
             </Button>
           </div>
 
-          <div className="w-full max-w-3xl mx-auto mb-4">
-            <div className="flex justify-center items-center">
-              <div className="px-4 py-2 bg-green-100 rounded-full text-sm font-medium text-green-800">
-                Paso {currentStep + 1}/{totalSteps}
-              </div>
-            </div>
-          </div>
+          <Stepper 
+            steps={totalSteps} 
+            currentStep={currentStep} 
+          />
 
           {!showPhotoGallery && !showPhotoConfirmDialog && (
             <div className="text-center mt-4 sm:mt-6">
