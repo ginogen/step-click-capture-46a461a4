@@ -531,7 +531,7 @@ const Process = () => {
     if (!locationReceived) {
       if (isGettingLocation) {
         toast({
-          variant: "warning",
+          variant: "default",
           title: "Espera un momento",
           description: "Obteniendo ubicación...",
         });
