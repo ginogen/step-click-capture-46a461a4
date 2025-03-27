@@ -711,7 +711,7 @@ const Process = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen p-2 sm:p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
         <div className="relative w-full max-w-lg mx-auto">
           <video 
@@ -746,26 +746,26 @@ const Process = () => {
           </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          <div className="flex justify-center mb-4">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex justify-center mb-2 sm:mb-4">
             <img 
               src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
               alt="Grupo Cazalá Seguros" 
-              className="h-16 object-contain"
+              className="h-12 sm:h-16 object-contain"
             />
           </div>
           
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-1">
+            <h2 className="text-lg sm:text-xl font-semibold mb-1">
               {selectedCoverage?.name || "Cobertura"}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs sm:text-sm text-gray-500">
               {selectedCoverage?.requiredPhotos} fotos requeridas
             </p>
             <Button
               onClick={handleChangeCoverage}
               variant="outline"
-              className="mt-2 text-xs"
+              className="mt-1 sm:mt-2 text-xs"
               size="sm"
             >
               Cambiar cobertura
@@ -778,18 +778,18 @@ const Process = () => {
             labels={getStepperLabels()}
           />
 
-          <div className="text-center mt-6">
+          <div className="text-center mt-4 sm:mt-6">
             <div className="flex flex-col items-center">
-              <h3 className="text-lg font-bold flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
                 {steps[currentStep]?.icon && (
                   <span className="text-gray-700">{steps[currentStep]?.icon}</span>
                 )}
                 {steps[currentStep]?.title}
               </h3>
               
-              <div className="mt-4 p-4 bg-gray-100 rounded-lg w-full max-w-md border border-gray-300 shadow-sm">
-                <p className="font-bold text-left mb-2">Instrucciones para tomar la foto:</p>
-                <p className="text-gray-700 text-left p-3 bg-gray-200 rounded border border-gray-200">
+              <div className="mt-3 p-3 sm:p-4 bg-gray-100 rounded-lg w-full max-w-md border border-gray-300 shadow-sm">
+                <p className="font-bold text-left text-sm sm:text-base mb-1 sm:mb-2">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left text-xs sm:text-sm p-2 sm:p-3 bg-gray-200 rounded border border-gray-200">
                   {steps[currentStep]?.instruction}
                 </p>
               </div>
@@ -797,8 +797,8 @@ const Process = () => {
           </div>
 
           {steps[currentStep]?.guideImage && (
-            <div className="flex justify-center my-4">
-              <div className="relative border-2 border-black rounded-lg overflow-hidden">
+            <div className="flex justify-center my-3 sm:my-4">
+              <div className="relative border-2 border-black rounded-lg overflow-hidden max-w-[90%] sm:max-w-full">
                 <img 
                   src={steps[currentStep].guideImage} 
                   alt={`Guía: ${steps[currentStep].title}`} 
@@ -817,22 +817,22 @@ const Process = () => {
             </div>
           )}
 
-          <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex flex-col items-center z-50">
+          <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-3 sm:p-4 flex flex-col items-center z-50">
             <Button
               onClick={handleOpenCamera}
-              className="w-full h-14 mb-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg"
+              className="w-full h-12 sm:h-14 mb-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg"
             >
-              <Camera className="w-6 h-6 mr-2" />
+              <Camera className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
               Tomar Foto
             </Button>
             
             <Button
               onClick={handleVoiceInstructions}
               variant="outline"
-              className="w-full h-10 mb-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="w-full h-9 sm:h-10 mb-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
               disabled={isPlayingVoice}
             >
-              <Headphones className="w-5 h-5 mr-2" />
+              <Headphones className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Instrucciones por Voz
             </Button>
 
@@ -840,9 +840,9 @@ const Process = () => {
               <Button
                 onClick={() => setShowPhotoGallery(true)}
                 variant="outline"
-                className="w-full h-10 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
+                className="w-full h-9 sm:h-10 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
               >
-                <Images className="w-5 h-5 mr-2" />
+                <Images className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Ver Fotos Tomadas ({photos.length}/{totalSteps})
               </Button>
             )}
@@ -851,10 +851,10 @@ const Process = () => {
               <Button
                 onClick={handleSkipStep}
                 variant="ghost"
-                className="mt-2 text-gray-500 hover:text-gray-700"
+                className="mt-1 sm:mt-2 text-gray-500 hover:text-gray-700"
                 size="sm"
               >
-                <X className="w-4 h-4 mr-1" />
+                <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 Omitir paso (opcional)
               </Button>
             )}

@@ -1,5 +1,6 @@
 
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StepperProps {
   steps: number;
@@ -8,14 +9,17 @@ interface StepperProps {
 }
 
 export function Stepper({ steps, currentStep, labels }: StepperProps) {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="w-full max-w-3xl mx-auto mb-6">
+    <div className="w-full max-w-3xl mx-auto mb-4">
       <div className="flex items-center justify-between">
         {Array.from({ length: steps }).map((_, i) => (
           <div key={i} className="flex items-center flex-1">
             <div 
               className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
+                "rounded-full flex items-center justify-center text-xs font-medium transition-colors",
+                isMobile ? "w-7 h-7" : "w-9 h-9",
                 i < currentStep 
                   ? "bg-green-400 text-white" 
                   : i === currentStep 
@@ -29,7 +33,8 @@ export function Stepper({ steps, currentStep, labels }: StepperProps) {
             {i < steps - 1 && (
               <div 
                 className={cn(
-                  "h-1 flex-1 mx-2",
+                  "flex-1 mx-1 md:mx-2",
+                  isMobile ? "h-0.5" : "h-1",
                   i < currentStep ? "bg-green-400" : "bg-gray-300"
                 )}
               />
@@ -39,12 +44,13 @@ export function Stepper({ steps, currentStep, labels }: StepperProps) {
       </div>
       
       {labels && (
-        <div className="flex justify-between mt-2">
+        <div className="flex justify-between mt-1 md:mt-2 px-1">
           {labels.map((label, i) => (
             <div 
               key={i} 
               className={cn(
-                "text-xs font-medium text-center max-w-[80px]",
+                "font-medium text-center truncate",
+                isMobile ? "text-[10px] max-w-[60px]" : "text-xs max-w-[80px]",
                 i === currentStep ? "text-gray-900" : "text-gray-500"
               )}
             >
