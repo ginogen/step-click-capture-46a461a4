@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -374,6 +374,7 @@ const Process = () => {
   const [showPhotoConfirmDialog, setShowPhotoConfirmDialog] = useState(false);
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
+  const [photoToRetakeIndex, setPhotoToRetakeIndex] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -571,11 +572,19 @@ const Process = () => {
   const confirmPhoto = () => {
     if (!currentPhotoData) return;
     
-    setPhotos([...photos, currentPhotoData]);
+    if (photoToRetakeIndex !== null) {
+      const newPhotos = [...photos];
+      newPhotos[photoToRetakeIndex] = currentPhotoData;
+      setPhotos(newPhotos);
+      setPhotoToRetakeIndex(null);
+    } else {
+      setPhotos([...photos, currentPhotoData]);
+    }
+    
     setCurrentPhotoData(null);
     setShowPhotoConfirmDialog(false);
 
-    sonnerToast(steps[currentStep]?.title + " completado", {
+    sonnerToast(photoToRetakeIndex !== null ? "Foto actualizada" : steps[currentStep]?.title + " completado", {
       position: "bottom-center",
       duration: 1500,
       className: "text-sm bg-green-500 text-white rounded-md",
@@ -708,6 +717,12 @@ const Process = () => {
       const stepIndex = Math.floor(i * (steps.length / Math.min(6, totalSteps)));
       return steps[stepIndex]?.title || `Paso ${i + 1}`;
     });
+  };
+
+  const handleRetakePhoto = (index: number) => {
+    setPhotoToRetakeIndex(index);
+    setShowPhotoGallery(false);
+    handleOpenCamera();
   };
 
   return (
@@ -912,21 +927,32 @@ const Process = () => {
           <DialogHeader>
             <DialogTitle>Revisión de Fotos</DialogTitle>
             <DialogDescription>
-              Revisa todas las fotos capturadas
+              Revisa todas las fotos capturadas. Puedes volver a tomar cualquier foto si es necesario.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             {photos.map((photo, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-2">
+              <div key={index} className="border border-gray-200 rounded-lg p-2 relative">
                 <img 
                   src={photo} 
                   alt={`${index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}`} 
                   className="rounded-lg shadow-sm w-full"
                 />
-                <p className="text-center text-sm font-medium mt-2">
-                  <span className="font-bold">{index + 1}/{photos.length}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
-                </p>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-sm font-medium">
+                    <span className="font-bold">{index + 1}/{photos.length}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
+                  </p>
+                  <Button 
+                    onClick={() => handleRetakePhoto(index)} 
+                    size="sm" 
+                    variant="outline"
+                    className="text-xs"
+                  >
+                    <RotateCcw className="w-3 h-3 mr-1" />
+                    Volver a tomar
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
