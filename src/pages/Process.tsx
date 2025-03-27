@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw } from "lucide-react";
+import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { Stepper } from "@/components/ui/stepper";
+import { Switch } from "@/components/ui/switch";
 
 const COVERAGE_TYPES = [
   {
@@ -376,6 +377,7 @@ const Process = () => {
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const [photoToRetakeIndex, setPhotoToRetakeIndex] = useState<number | null>(null);
   const [locationReceived, setLocationReceived] = useState(false);
+  const [autoVoiceInstructions, setAutoVoiceInstructions] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -415,6 +417,12 @@ const Process = () => {
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (autoVoiceInstructions && steps.length > 0 && currentStep < steps.length) {
+      handleVoiceInstructions();
+    }
+  }, [currentStep, steps]);
 
   const requestLocationPermission = () => {
     setIsGettingLocation(true);
@@ -471,7 +479,7 @@ const Process = () => {
           toast({
             variant: "destructive",
             title: "Error de geolocalización",
-            description: errorMessage + ". Las fotos se tomarán sin información de ubicación.",
+            description: errorMessage + ". Se requiere tu ubicación para continuar.",
             action: error.code === 1 ? (
               <Button 
                 onClick={() => requestLocationPermission()}
@@ -497,23 +505,7 @@ const Process = () => {
         videoRef.current.srcObject = stream;
       }
       
-      if (!permissionDenied) {
-        requestLocationPermission();
-      } else {
-        toast({
-          title: "Ubicación no disponible",
-          description: "Se tomarán fotos sin información de ubicación",
-          action: (
-            <Button 
-              onClick={() => requestLocationPermission()}
-              variant="outline" 
-              size="sm"
-            >
-              Permitir ubicación
-            </Button>
-          )
-        });
-      }
+      requestLocationPermission();
       
     } catch (error) {
       toast({
@@ -536,21 +528,30 @@ const Process = () => {
   const handlePhotoCapture = () => {
     if (!videoRef.current) return;
     
-    if (!locationReceived && !permissionDenied && !isGettingLocation) {
-      toast({
-        variant: "destructive",
-        title: "Ubicación requerida",
-        description: "Espera a que se obtenga tu ubicación antes de tomar la foto.",
-      });
-      return;
-    }
-    
-    if (isGettingLocation) {
-      toast({
-        variant: "destructive",
-        title: "Espera un momento",
-        description: "Obteniendo ubicación...",
-      });
+    if (!locationReceived) {
+      if (isGettingLocation) {
+        toast({
+          variant: "warning",
+          title: "Espera un momento",
+          description: "Obteniendo ubicación...",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Ubicación requerida",
+          description: "Se requiere tu ubicación para tomar fotos.",
+          action: (
+            <Button 
+              onClick={() => requestLocationPermission()}
+              variant="outline" 
+              size="sm"
+            >
+              Permitir ubicación
+            </Button>
+          )
+        });
+        requestLocationPermission();
+      }
       return;
     }
 
@@ -646,6 +647,8 @@ const Process = () => {
 
   const handleVoiceInstructions = () => {
     try {
+      if (isPlayingVoice) return;
+      
       setIsPlayingVoice(true);
       
       const currentInstruction = steps[currentStep]?.voiceInstruction || 
@@ -670,10 +673,12 @@ const Process = () => {
         });
       };
       
-      toast({
-        title: "Reproduciendo instrucciones",
-        description: currentInstruction,
-      });
+      if (!autoVoiceInstructions) {
+        toast({
+          title: "Reproduciendo instrucciones",
+          description: currentInstruction,
+        });
+      }
       
       window.speechSynthesis.speak(speech);
       
@@ -746,6 +751,16 @@ const Process = () => {
     handleOpenCamera();
   };
 
+  const toggleVoiceInstructions = () => {
+    setAutoVoiceInstructions(!autoVoiceInstructions);
+    toast({
+      title: autoVoiceInstructions ? "Instrucciones por voz desactivadas" : "Instrucciones por voz activadas",
+      description: autoVoiceInstructions ? 
+        "Las instrucciones por voz no se reproducirán automáticamente" : 
+        "Las instrucciones por voz se reproducirán automáticamente en cada paso",
+    });
+  };
+
   return (
     <div className="min-h-screen p-2 sm:p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
       {showCamera ? (
@@ -774,13 +789,21 @@ const Process = () => {
           <div className="fixed bottom-10 inset-x-0 flex justify-center z-50">
             <Button
               onClick={handlePhotoCapture}
-              className="w-24 h-24 rounded-full bg-white text-black hover:bg-gray-100 shadow-lg border-4 border-black"
+              className={`w-24 h-24 rounded-full hover:bg-gray-100 shadow-lg border-4 ${locationReceived ? 'bg-white text-black border-black' : 'bg-gray-300 text-gray-500 border-gray-400'}`}
               size="icon"
-              disabled={isGettingLocation && !locationReceived && !permissionDenied}
+              disabled={!locationReceived}
             >
               <Camera className="w-12 h-12" />
             </Button>
           </div>
+          
+          {!locationReceived && !permissionDenied && (
+            <div className="fixed bottom-28 inset-x-0 flex justify-center">
+              <div className="bg-red-500 text-white px-4 py-2 rounded-full animate-pulse text-sm font-bold">
+                Esperando ubicación...
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-6">
@@ -809,6 +832,18 @@ const Process = () => {
             steps={totalSteps} 
             currentStep={currentStep} 
           />
+
+          <div className="flex justify-end items-center -mt-2 mb-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-600">{autoVoiceInstructions ? 'Voz automática activada' : 'Voz automática desactivada'}</span>
+              <Switch
+                checked={autoVoiceInstructions}
+                onCheckedChange={toggleVoiceInstructions}
+                aria-label="Instrucciones por voz automáticas"
+              />
+              {autoVoiceInstructions ? <Volume2 className="h-3.5 w-3.5 text-green-600" /> : <VolumeX className="h-3.5 w-3.5 text-gray-400" />}
+            </div>
+          </div>
 
           <div className="text-center mt-4 sm:mt-6">
             <div className="flex flex-col items-center">
