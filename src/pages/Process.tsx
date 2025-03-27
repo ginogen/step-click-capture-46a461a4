@@ -784,31 +784,27 @@ const Process = () => {
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-6">
-          <div className="flex justify-center mb-2 sm:mb-4">
+          <div className="flex justify-between items-center mb-2 sm:mb-4">
             <img 
               src={COMPANY_LOGO} 
               alt="Logo Cazalá Seguros" 
-              className="h-12 sm:h-16 object-contain"
+              className="h-8 sm:h-10 object-contain"
             />
+            <div className="flex flex-col items-end">
+              <p className="text-sm font-medium text-gray-800">
+                {selectedCoverage?.name || "Cobertura"}
+              </p>
+              <Button
+                onClick={handleChangeCoverage}
+                variant="outline"
+                className="text-xs px-1.5 py-0.5 h-6 mt-1"
+                size="sm"
+              >
+                Cambiar
+              </Button>
+            </div>
           </div>
           
-          <div className="text-center">
-            <h2 className="text-lg sm:text-xl font-semibold mb-1">
-              {selectedCoverage?.name || "Cobertura"}
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-500">
-              {selectedCoverage?.requiredPhotos} fotos requeridas
-            </p>
-            <Button
-              onClick={handleChangeCoverage}
-              variant="outline"
-              className="mt-1 text-xs px-1.5 py-0.5 h-7"
-              size="sm"
-            >
-              Cambiar cobertura
-            </Button>
-          </div>
-
           <Stepper 
             steps={totalSteps} 
             currentStep={currentStep} 
@@ -823,9 +819,9 @@ const Process = () => {
                 {steps[currentStep]?.title}
               </h3>
               
-              <div className="mt-3 p-3 sm:p-4 bg-gray-100 rounded-lg w-full max-w-md border border-gray-300 shadow-sm">
-                <p className="font-bold text-left text-sm sm:text-base mb-1 sm:mb-2">Instrucciones para tomar la foto:</p>
-                <p className="text-gray-700 text-left text-xs sm:text-sm p-2 sm:p-3 bg-gray-200 rounded border border-gray-200">
+              <div className="mt-3 p-4 sm:p-5 bg-blue-100 rounded-lg w-full max-w-md border border-blue-200 shadow-sm">
+                <p className="font-bold text-left text-base sm:text-lg mb-2 sm:mb-3">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left text-base sm:text-base p-3 sm:p-4 bg-blue-50 rounded border border-blue-200">
                   {steps[currentStep]?.instruction}
                 </p>
               </div>
