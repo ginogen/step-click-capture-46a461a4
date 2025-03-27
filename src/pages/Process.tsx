@@ -764,8 +764,8 @@ const Process = () => {
         <div className="space-y-4 sm:space-y-6">
           <div className="flex justify-center mb-2 sm:mb-4">
             <img 
-              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
-              alt="Grupo Cazalá Seguros" 
+              src={COMPANY_LOGO} 
+              alt="Logo Cazalá Seguros" 
               className="h-12 sm:h-16 object-contain"
             />
           </div>
@@ -780,7 +780,7 @@ const Process = () => {
             <Button
               onClick={handleChangeCoverage}
               variant="outline"
-              className="mt-1 sm:mt-2 text-xs"
+              className="mt-1 text-xs px-2 py-1 h-auto"
               size="sm"
             >
               Cambiar cobertura
@@ -809,18 +809,15 @@ const Process = () => {
                 </p>
               </div>
             </div>
-          </div>
 
-          {steps[currentStep]?.guideImage && (
-            <div className="flex justify-center my-3 sm:my-4">
-              <div className="relative border-2 border-black rounded-lg overflow-hidden max-w-[90%] sm:max-w-full">
+            {steps[currentStep]?.guideImage && (
+              <div className="relative border-2 border-gray-300 rounded-lg mt-4 sm:mt-6 mx-auto max-w-sm">
                 <img 
                   src={steps[currentStep].guideImage} 
-                  alt={`Guía: ${steps[currentStep].title}`} 
-                  className="max-w-full h-auto"
+                  alt={`Guía: ${steps[currentStep].title}`}
+                  className="w-full rounded-lg"
                   onError={(e) => {
-                    console.error("Error cargando imagen de guía:", e);
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f0f0f0'/%3E%3Cpath d='M75,50 L25,50 M50,25 L50,75' stroke='%23cccccc' stroke-width='4'/%3E%3C/svg%3E";
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23f0f0f0'%3E%3Cpath d='M75,50 L25,50 M50,25 L50,75' stroke='%23cccccc' stroke-width='4'/%3E%3C/svg%3E";
                     toast({
                       variant: "destructive",
                       title: "Error",
@@ -833,8 +830,8 @@ const Process = () => {
                   FOTO DE EJEMPLO
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-3 sm:p-4 flex flex-col items-center z-50">
             <Button
@@ -890,15 +887,11 @@ const Process = () => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            {currentPhotoData && (
-              <img 
-                src={currentPhotoData} 
-                alt="Foto capturada" 
-                className="rounded-lg shadow-md w-full"
-              />
-            )}
-          </div>
+          <img 
+            src={currentPhotoData} 
+            alt="Foto capturada" 
+            className="rounded-lg shadow-md w-full"
+          />
           
           <DialogFooter className="flex flex-row justify-between sm:justify-between gap-2">
             <Button 
