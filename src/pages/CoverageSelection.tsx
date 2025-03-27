@@ -1,7 +1,16 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
 
 // Definición de tipos de coberturas de automóviles
 const AUTO_COVERAGE_TYPES = [
@@ -45,6 +54,15 @@ const CoverageSelection = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showAutoModal, setShowAutoModal] = useState(false);
+  const [selectedCoverage, setSelectedCoverage] = useState<string | null>(null);
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    if (category === "auto") {
+      setShowAutoModal(true);
+    }
+  };
 
   const handleCoverageSelect = (coverage: string) => {
     // Guardar el tipo de cobertura seleccionado en sessionStorage
@@ -52,14 +70,23 @@ const CoverageSelection = () => {
     
     // Determinar el nombre de la cobertura seleccionada
     const allCoverages = [...AUTO_COVERAGE_TYPES, ...OTHER_COVERAGE_TYPES];
-    const selectedCoverage = allCoverages.find(type => type.id === coverage);
+    const coverageItem = allCoverages.find(type => type.id === coverage);
     
     toast({
       title: "Cobertura seleccionada",
-      description: `Has elegido la cobertura: ${selectedCoverage?.name}`
+      description: `Has elegido la cobertura: ${coverageItem?.name}`
     });
     
-    // Navegar a la página de proceso
+    if (coverage.startsWith("responsabilidad") || coverage.startsWith("intermedia") || coverage.startsWith("terceros")) {
+      setSelectedCoverage(coverage);
+      setShowAutoModal(true);
+    } else {
+      // Para coberturas no relacionadas con vehículos, navegar directamente
+      navigate("/process");
+    }
+  };
+
+  const continueToProcess = () => {
     navigate("/process");
   };
 
@@ -81,7 +108,7 @@ const CoverageSelection = () => {
       {!selectedCategory ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-lg">
           <Button
-            onClick={() => setSelectedCategory("auto")}
+            onClick={() => handleCategorySelect("auto")}
             className="py-6 bg-white hover:bg-gray-100 text-black border border-gray-300 transition-all duration-200"
             variant="outline"
           >
@@ -155,6 +182,25 @@ const CoverageSelection = () => {
           </Button>
         </>
       )}
+
+      <Dialog open={showAutoModal} onOpenChange={setShowAutoModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Importante</DialogTitle>
+            <DialogDescription>
+              Por favor, antes de tomar las fotos, estacione el vehículo en un lugar despejado, lejos de paredes u objetos que puedan obstruir la vista. Capture todas las imágenes solicitadas sin mover el vehículo. ¡Gracias!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button 
+              onClick={continueToProcess} 
+              className="w-full"
+            >
+              Entendido, continuar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

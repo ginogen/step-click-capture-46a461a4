@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones } from "lucide-react";
-import { useConversation } from "@11labs/react";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -289,16 +288,6 @@ const generateStepsForCoverage = (coverageType) => {
     return [
       ...vehiclePhotos,
       {
-        title: "Cédula Verde",
-        instruction: "Toma una foto clara de la cédula verde del vehículo.",
-        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
-      },
-      {
-        title: "DNI",
-        instruction: "Toma una foto de tu DNI (ambos lados).",
-        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
-      },
-      {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
         voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
@@ -318,16 +307,6 @@ const generateStepsForCoverage = (coverageType) => {
     return [
       ...vehiclePhotos,
       {
-        title: "Cédula Verde",
-        instruction: "Toma una foto clara de la cédula verde del vehículo.",
-        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
-      },
-      {
-        title: "DNI",
-        instruction: "Toma una foto de tu DNI (ambos lados).",
-        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
-      },
-      {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
         voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
@@ -346,16 +325,6 @@ const generateStepsForCoverage = (coverageType) => {
     
     return [
       ...vehiclePhotos,
-      {
-        title: "Cédula Verde",
-        instruction: "Toma una foto clara de la cédula verde del vehículo.",
-        voiceInstruction: "Por favor, toma una foto clara de la cédula verde del vehículo.",
-      },
-      {
-        title: "DNI",
-        instruction: "Toma una foto de tu DNI (ambos lados).",
-        voiceInstruction: "Por favor, toma una foto de tu DNI, asegurándote que se vean claramente ambos lados.",
-      },
       {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
@@ -403,10 +372,10 @@ const Process = () => {
   const [currentPhotoData, setCurrentPhotoData] = useState<string | null>(null);
   const [showPhotoConfirmDialog, setShowPhotoConfirmDialog] = useState(false);
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [showPhotoGallery, setShowPhotoGallery] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
-  const conversation = useConversation();
 
   useEffect(() => {
     const storedCoverageType = sessionStorage.getItem("coverageType");
@@ -611,25 +580,12 @@ const Process = () => {
       className: "text-sm bg-green-500 text-white rounded-md",
     });
 
-    const isLastPhotoBeforeGNC = 
-      (coverageType === "responsabilidad_civil" && currentStep === 6) ||
-      (coverageType === "intermedia" && currentStep === 8) ||
-      (coverageType === "terceros_completo_todo_riesgo" && currentStep === 11);
+    const isGNCStep = steps[currentStep]?.title?.includes("GNC");
     
-    const isLastPhotoAndNoGNC = 
-      ((coverageType === "responsabilidad_civil" && currentStep === 7) || 
-       (coverageType === "intermedia" && currentStep === 9) ||
-       (coverageType === "terceros_completo_todo_riesgo" && currentStep === 12)) && 
-      hasGNC === false;
-
-    if (isLastPhotoBeforeGNC) {
-      showGNCQuestion();
-    } else if (isLastPhotoAndNoGNC) {
-      handleComplete();
-    } else if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+    if (isGNCStep || currentStep >= steps.length - 1) {
+      setShowPhotoGallery(true);
     } else {
-      handleComplete();
+      setCurrentStep(currentStep + 1);
     }
   };
 
@@ -639,39 +595,11 @@ const Process = () => {
     handleOpenCamera();
   };
 
-  const showGNCQuestion = () => {
-    toast({
-      title: "¿Tu vehículo tiene GNC?",
-      description: "Selecciona Sí o No para continuar",
-      action: (
-        <div className="flex gap-2 mt-2">
-          <Button 
-            onClick={() => handleGNCResponse(true)}
-            variant="default" 
-            size="sm"
-          >
-            Sí
-          </Button>
-          <Button 
-            onClick={() => handleGNCResponse(false)}
-            variant="outline" 
-            size="sm"
-          >
-            No
-          </Button>
-        </div>
-      ),
-      duration: 10000,
-    });
-  };
-
   const handleGNCResponse = (hasGNCInstalled: boolean) => {
     setHasGNC(hasGNCInstalled);
     
-    if (hasGNCInstalled) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      handleComplete();
+    if (!hasGNCInstalled) {
+      setShowPhotoGallery(true);
     }
   };
 
@@ -681,6 +609,8 @@ const Process = () => {
       description: "Todas las fotos han sido capturadas correctamente.",
       variant: "default",
     });
+    
+    setShowPhotoGallery(false);
   };
 
   const handleVoiceInstructions = () => {
@@ -742,7 +672,7 @@ const Process = () => {
       if (currentStep < steps.length - 1) {
         setCurrentStep(currentStep + 1);
       } else {
-        handleComplete();
+        setShowPhotoGallery(true);
       }
     }
   };
@@ -757,7 +687,10 @@ const Process = () => {
     if (!steps.length) return 0;
     
     if (["responsabilidad_civil", "intermedia", "terceros_completo_todo_riesgo"].includes(coverageType)) {
-      return hasGNC === false ? steps.length - 1 : steps.length;
+      if (hasGNC === false) {
+        return steps.length - 1;
+      }
+      return steps.length;
     }
     
     return steps.length;
@@ -790,12 +723,15 @@ const Process = () => {
             )}
           </div>
           
-          <Button
-            onClick={handlePhotoCapture}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-black hover:bg-gray-100"
-          >
-            <Camera className="w-8 h-8" />
-          </Button>
+          <div className="fixed bottom-10 inset-x-0 flex justify-center z-50">
+            <Button
+              onClick={handlePhotoCapture}
+              className="w-20 h-20 rounded-full bg-white text-black hover:bg-gray-100 shadow-lg"
+              size="icon"
+            >
+              <Camera className="w-10 h-10" />
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-6">
@@ -860,88 +796,48 @@ const Process = () => {
             </div>
           )}
 
-          <div className="flex justify-center space-x-4">
-            <Button
-              onClick={handleOpenCamera}
-              className="bg-black hover:bg-gray-800 text-white"
-            >
-              <Camera className="w-5 h-5 mr-2" />
-              Tomar Foto
-            </Button>
-            
-            <Button
-              onClick={handleVoiceInstructions}
-              variant="outline"
-              className="border-black text-black hover:bg-gray-100"
-              disabled={isPlayingVoice}
-            >
-              <Headphones className="w-5 h-5 mr-2" />
-              {isPlayingVoice ? "Reproduciendo..." : "Instrucciones por Voz"}
-            </Button>
-
-            {permissionDenied && (
+          <div className="fixed bottom-10 inset-x-0 flex justify-center z-50">
+            <div className="flex space-x-4 bg-white rounded-full shadow-lg p-2">
               <Button
-                onClick={() => requestLocationPermission()}
-                variant="ghost"
-                className="text-gray-500 hover:text-gray-800"
+                onClick={handleVoiceInstructions}
+                variant="outline"
+                className="border-black text-black hover:bg-gray-100 rounded-full"
+                disabled={isPlayingVoice}
+                size="icon"
               >
-                <MapPin className="w-5 h-5 mr-2" />
-                Ubicación
+                <Headphones className="w-6 h-6" />
               </Button>
-            )}
-
-            {steps[currentStep]?.optional && (
+              
               <Button
-                onClick={handleSkipStep}
-                variant="ghost"
-                className="text-gray-500 hover:text-gray-800"
+                onClick={handleOpenCamera}
+                className="w-16 h-16 rounded-full bg-black hover:bg-gray-800 text-white"
+                size="icon"
               >
-                Omitir
+                <Camera className="w-8 h-8" />
               </Button>
-            )}
-          </div>
 
-          {photos.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-center">
-                Fotos Capturadas ({photos.length}/{totalSteps})
-              </h3>
-              <div className="grid gap-4">
-                {photos.map((photo, index) => (
-                  <div key={index} className="photo-preview">
-                    <img 
-                      src={photo} 
-                      alt={`${index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}`} 
-                      className="rounded-lg shadow-lg w-full max-w-lg mx-auto"
-                    />
-                    <p className="text-center text-sm text-gray-500 mt-1">
-                      <span className="font-bold">{index + 1}/{totalSteps}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {photos.length === totalSteps && (
+              {steps[currentStep]?.optional && (
                 <Button
-                  onClick={() => {
-                    toast({
-                      title: "Enviando fotos",
-                      description: "Las fotos se están enviando al servidor...",
-                    });
-                    setTimeout(() => {
-                      toast({
-                        title: "¡Éxito!",
-                        description: "Las fotos se han enviado correctamente",
-                        variant: "default",
-                      });
-                    }, 2000);
-                  }}
-                  className="w-full py-6 bg-green-600 hover:bg-green-700 text-white"
+                  onClick={handleSkipStep}
+                  variant="outline"
+                  className="rounded-full"
+                  size="icon"
                 >
-                  <Send className="w-5 h-5 mr-2" />
-                  Enviar Fotos
+                  <X className="w-6 h-6" />
                 </Button>
               )}
+            </div>
+          </div>
+
+          {photos.length > 0 && !showPhotoGallery && (
+            <div className="mt-16 pt-8 border-t border-gray-200">
+              <Button
+                onClick={() => setShowPhotoGallery(true)}
+                variant="outline"
+                className="w-full"
+              >
+                Ver fotos tomadas ({photos.length}/{totalSteps})
+              </Button>
             </div>
           )}
         </div>
@@ -984,6 +880,51 @@ const Process = () => {
               <Check className="w-4 h-4 mr-2" />
               Sí, continuar
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPhotoGallery} onOpenChange={setShowPhotoGallery}>
+        <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Revisión de Fotos</DialogTitle>
+            <DialogDescription>
+              Revisa todas las fotos capturadas
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {photos.map((photo, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-2">
+                <img 
+                  src={photo} 
+                  alt={`${index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}`} 
+                  className="rounded-lg shadow-sm w-full"
+                />
+                <p className="text-center text-sm font-medium mt-2">
+                  <span className="font-bold">{index + 1}/{photos.length}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
+                </p>
+              </div>
+            ))}
+          </div>
+          
+          <DialogFooter>
+            {photos.length < totalSteps ? (
+              <Button 
+                onClick={() => setShowPhotoGallery(false)}
+                className="w-full"
+              >
+                Continuar tomando fotos ({photos.length}/{totalSteps})
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleComplete}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Enviar todas las fotos
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

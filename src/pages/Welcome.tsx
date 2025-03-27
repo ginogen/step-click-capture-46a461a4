@@ -29,7 +29,7 @@ const Welcome = () => {
 
         <div className="mt-8">
           <Button
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate("/coverage-selection")}
             className="w-full py-6 text-lg bg-black hover:bg-gray-800 text-white transition-all duration-200"
           >
             Comenzar
