@@ -713,40 +713,6 @@ const Process = () => {
   };
 
   const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
-
-  const calculateTotalSteps = () => {
-    if (!steps.length) return 0;
-    
-    if (["responsabilidad_civil", "intermedia", "terceros_completo_todo_riesgo"].includes(coverageType)) {
-      if (hasGNC === false) {
-        return steps.length - 1;
-      }
-      return steps.length;
-    }
-    
-    return steps.length;
-  };
-
-  const totalSteps = calculateTotalSteps();
-
-  const getStepperLabels = () => {
-    if (steps.length <= 6) {
-      return steps.map(step => step.title);
-    }
-    
-    return Array.from({ length: Math.min(6, totalSteps) }, (_, i) => {
-      const stepIndex = Math.floor(i * (steps.length / Math.min(6, totalSteps)));
-      return steps[stepIndex]?.title || `Paso ${i + 1}`;
-    });
-  };
-
-  const handleRetakePhoto = (index: number) => {
-    setPhotoToRetakeIndex(index);
-    setShowPhotoGallery(false);
-    handleOpenCamera();
-  };
-
-  const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
   const totalSteps = calculateTotalSteps();
 
   return (
@@ -814,4 +780,182 @@ const Process = () => {
 
           <div className="w-full max-w-3xl mx-auto mb-4">
             <div className="flex justify-center items-center">
-              <div className="px-4 py-
+              <div className="px-4 py-2 bg-green-100 rounded-full text-sm font-medium text-green-800">
+                Paso {currentStep + 1}/{totalSteps}
+              </div>
+            </div>
+          </div>
+
+          {!showPhotoGallery && !showPhotoConfirmDialog && (
+            <div className="text-center mt-4 sm:mt-6">
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-md mb-3">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-2">
+                    {`Paso ${currentStep + 1} de ${totalSteps}: ${steps[currentStep]?.title || ""}`}
+                  </h2>
+                  
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p className="text-base font-medium text-blue-800">
+                      {steps[currentStep]?.instruction || "Captura la foto según las instrucciones"}
+                    </p>
+                  </div>
+                </div>
+                
+                {steps[currentStep]?.guideImage && (
+                  <div className="w-full max-w-md mb-4 relative">
+                    <div className="relative">
+                      <img 
+                        src={steps[currentStep]?.guideImage} 
+                        alt="Imagen de ejemplo" 
+                        className="w-full rounded-lg border-2 border-gray-300"
+                      />
+                      <div className="absolute top-3 right-3 bg-green-100 text-green-800 px-2 py-1 rounded-md flex items-center">
+                        <CheckCircle2 className="w-4 h-4 mr-1" />
+                        <span className="text-sm font-medium">Ejemplo correcto</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full max-w-md">
+                  <Button
+                    onClick={handleOpenCamera}
+                    size="lg"
+                    className="flex-1 h-14 text-lg font-medium"
+                    variant="primary"
+                  >
+                    <Camera className="w-6 h-6 mr-2" />
+                    Sacar Foto Ahora
+                  </Button>
+                  
+                  <Button
+                    onClick={handleVoiceInstructions}
+                    size="lg"
+                    className="flex-1 h-14 text-lg font-medium"
+                    variant="outline"
+                    disabled={isPlayingVoice}
+                  >
+                    <Headphones className="w-6 h-6 mr-2" />
+                    {isPlayingVoice ? "Reproduciendo..." : "Escuchar Instrucciones"}
+                  </Button>
+                </div>
+                
+                {steps[currentStep]?.optional && (
+                  <Button
+                    onClick={handleSkipStep}
+                    variant="ghost"
+                    className="mt-4 text-gray-500"
+                  >
+                    Omitir este paso (opcional)
+                  </Button>
+                )}
+                
+                {photos.length > 0 && (
+                  <Button
+                    onClick={() => setShowPhotoGallery(true)}
+                    variant="outline"
+                    className="mt-6"
+                  >
+                    <Images className="w-5 h-5 mr-2" />
+                    Ver Fotos Tomadas ({photos.length})
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {showPhotoGallery && (
+            <div className="w-full max-w-2xl mx-auto">
+              <h2 className="text-xl font-bold mb-4 text-center">Fotos Capturadas</h2>
+              
+              <div className="grid grid-cols-2 gap-4">
+                {photos.map((photo, index) => (
+                  <div key={index} className="relative">
+                    <img 
+                      src={photo} 
+                      alt={`Foto ${index + 1}`} 
+                      className="w-full h-auto rounded-lg border border-gray-300"
+                    />
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      <Button
+                        onClick={() => handleRetakePhoto(index)}
+                        variant="destructive"
+                        size="sm"
+                        className="p-1 h-8 w-8"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                      {steps[index]?.title || `Foto ${index + 1}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="flex justify-between mt-6">
+                <Button
+                  onClick={() => setShowPhotoGallery(false)}
+                  variant="outline"
+                >
+                  Volver
+                </Button>
+                
+                <Button
+                  onClick={handleComplete}
+                  disabled={photos.length === 0}
+                >
+                  <Check className="w-5 h-5 mr-2" />
+                  Completar Proceso
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
+      <Dialog open={showPhotoConfirmDialog} onOpenChange={setShowPhotoConfirmDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirmar Foto</DialogTitle>
+            <DialogDescription>
+              ¿La foto es clara y cumple con las instrucciones?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col items-center py-4">
+            {currentPhotoData && (
+              <img 
+                src={currentPhotoData} 
+                alt="Foto capturada" 
+                className="max-h-[60vh] w-auto rounded-lg"
+              />
+            )}
+          </div>
+          
+          <DialogFooter className="flex flex-row justify-between sm:justify-between">
+            <Button
+              onClick={rejectPhoto}
+              variant="outline"
+              size="lg"
+            >
+              <X className="w-5 h-5 mr-2" />
+              Rechazar
+            </Button>
+            
+            <Button
+              onClick={confirmPhoto}
+              variant="success"
+              size="lg"
+            >
+              <Check className="w-5 h-5 mr-2" />
+              Confirmar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Process;
