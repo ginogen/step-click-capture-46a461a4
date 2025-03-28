@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw, Volume2, VolumeX } from "lucide-react";
@@ -74,6 +75,11 @@ const GUIDE_IMAGES = {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
       instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
+    },
+    {
+      url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
+      title: "RUEDA DE CERCA",
+      instruction: "Para que se vea marca y medida. Si no se ve, enviar fotos más de cerca o pasarlo por escrito. Ejemplo: PIRELLI 175/70/R13."
     }
   ],
   intermedia: [
