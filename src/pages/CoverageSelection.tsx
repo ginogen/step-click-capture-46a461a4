@@ -16,17 +16,17 @@ const AUTO_COVERAGE_TYPES = [
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 6,
+    requiredPhotos: 8,
   },
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 8,
+    requiredPhotos: 10,
   },
   {
     id: "terceros_completo_todo_riesgo",
     name: "Terceros Completo / Todo Riesgo",
-    requiredPhotos: 10,
+    requiredPhotos: 13,
   },
 ];
 

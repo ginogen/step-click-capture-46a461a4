@@ -19,17 +19,17 @@ const COVERAGE_TYPES = [
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 6,
+    requiredPhotos: 8,
   },
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 8,
+    requiredPhotos: 10,
   },
   {
     id: "terceros_completo_todo_riesgo",
     name: "Terceros Completo / Todo Riesgo",
-    requiredPhotos: 10,
+    requiredPhotos: 13,
   },
   {
     id: "edificio_incendio",
@@ -101,11 +101,6 @@ const GUIDE_IMAGES = {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
       instruction: "Capturar claramente los kilómetros del vehículo."
-    },
-    {
-      url: "/lovable-uploads/7721fb43-8d1b-4586-8d9b-01a0043a355b.png",
-      title: "DEL TABLERO",
-      instruction: "Se saca desde la puerta enfocando en diagonal."
     },
     {
       url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
@@ -818,222 +813,212 @@ const Process = () => {
               alt="Logo Cazalá Seguros" 
               className="h-8 sm:h-10 object-contain"
             />
-            <div className="flex space-x-2">
-              <Button 
-                onClick={toggleVoiceInstructions}
-                variant="outline"
-                size="sm"
-                className="flex items-center"
-              >
-                {autoVoiceInstructions ? <Volume2 className="w-4 h-4 mr-1" /> : <VolumeX className="w-4 h-4 mr-1" />}
-                <span className="hidden sm:inline">
-                  {autoVoiceInstructions ? "Voz activada" : "Voz desactivada"}
-                </span>
-              </Button>
-              <Button 
+            <div className="flex flex-col items-end">
+              <p className="text-sm font-medium text-gray-800">
+                {selectedCoverage?.name || "Cobertura"}
+              </p>
+              <Button
                 onClick={handleChangeCoverage}
                 variant="outline"
+                className="text-xs px-1.5 py-0.5 h-6 mt-1"
                 size="sm"
               >
-                Cambiar cobertura
+                Cambiar
               </Button>
             </div>
           </div>
           
-          {selectedCoverage && (
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-              <h2 className="text-lg font-medium mb-1">Cobertura seleccionada</h2>
-              <p className="text-gray-600">{selectedCoverage.name}</p>
-              <div className="mt-2 flex items-center">
-                <span className="text-sm text-gray-500 mr-2">Fotos requeridas:</span>
-                <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                  {totalSteps}
-                </span>
-              </div>
-            </div>
-          )}
-          
-          {showPhotoGallery ? (
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium">Galería de fotos</h2>
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={() => setShowPhotoGallery(false)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Volver
-                  </Button>
-                  <Button
-                    onClick={handleComplete}
-                    size="sm"
-                  >
-                    <Check className="w-4 h-4 mr-1" />
-                    Completar
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                {photos.map((photo, index) => (
-                  <div key={index} className="relative">
-                    <img 
-                      src={photo} 
-                      alt={`Foto ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-md"
-                    />
-                    <button
-                      onClick={() => handleRetakePhoto(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow-md"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </button>
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs px-2 py-1">
-                      {steps[index]?.title || `Foto ${index + 1}`}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {photos.length < steps.length && (
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    onClick={() => {
-                      setShowPhotoGallery(false);
-                      setCurrentStep(photos.length);
-                    }}
-                    variant="outline"
-                  >
-                    <Camera className="w-4 h-4 mr-1" />
-                    Continuar con las fotos
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <Stepper 
-                steps={totalSteps}
-                currentStep={currentStep}
+          <Stepper 
+            steps={totalSteps} 
+            currentStep={currentStep} 
+          />
+
+          <div className="flex justify-end items-center -mt-2 mb-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-600">{autoVoiceInstructions ? 'Voz automática activada' : 'Voz automática desactivada'}</span>
+              <Switch
+                checked={autoVoiceInstructions}
+                onCheckedChange={toggleVoiceInstructions}
+                aria-label="Instrucciones por voz automáticas"
               />
+              {autoVoiceInstructions ? <Volume2 className="h-3.5 w-3.5 text-green-600" /> : <VolumeX className="h-3.5 w-3.5 text-gray-400" />}
+            </div>
+          </div>
+
+          <div className="text-center mt-4 sm:mt-6">
+            <div className="flex flex-col items-center">
+              <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
+                {steps[currentStep]?.icon && (
+                  <span className="text-gray-700">{steps[currentStep]?.icon}</span>
+                )}
+                {steps[currentStep]?.title}
+              </h3>
               
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {steps[currentStep]?.title || "Foto"}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {steps[currentStep]?.instruction || "Toma una foto clara"}
-                  </p>
-                </div>
-                
-                {steps[currentStep]?.guideImage && (
-                  <div className="flex justify-center mb-4">
-                    <img
-                      src={steps[currentStep].guideImage}
-                      alt="Guía de captura"
-                      className="max-w-full h-48 object-contain border border-gray-200 rounded-md"
-                    />
-                  </div>
-                )}
-                
-                <div className="flex flex-col space-y-3">
-                  <Button
-                    onClick={handleOpenCamera}
-                    className="w-full"
-                  >
-                    <Camera className="w-5 h-5 mr-2" />
-                    Tomar foto
-                  </Button>
-                  
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={handleVoiceInstructions}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      <Headphones className="w-5 h-5 mr-2" />
-                      Instrucciones
-                    </Button>
-                    
-                    {steps[currentStep]?.optional && (
-                      <Button
-                        onClick={handleSkipStep}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        <X className="w-5 h-5 mr-2" />
-                        Omitir
-                      </Button>
-                    )}
-                  </div>
-                </div>
-                
-                {currentStep > 0 && (
-                  <div className="mt-4 flex justify-center">
-                    <Button
-                      onClick={() => setCurrentStep(currentStep - 1)}
-                      variant="ghost"
-                      size="sm"
-                    >
-                      Volver al paso anterior
-                    </Button>
-                  </div>
-                )}
+              <div className="mt-3 p-4 sm:p-5 bg-blue-100 rounded-lg w-full max-w-md border border-blue-200 shadow-sm">
+                <p className="font-bold text-left text-base sm:text-lg mb-2 sm:mb-3">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left text-base sm:text-base p-3 sm:p-4 bg-blue-50 rounded border border-blue-200">
+                  {steps[currentStep]?.instruction}
+                </p>
               </div>
-            </>
-          )}
-          
-          {photos.length > 0 && !showPhotoGallery && (
-            <div className="flex justify-center mt-4">
-              <Button 
+            </div>
+
+            {steps[currentStep]?.guideImage && (
+              <div className="relative border-2 border-gray-300 rounded-lg mt-4 sm:mt-6 mx-auto max-w-sm">
+                <img 
+                  src={steps[currentStep].guideImage} 
+                  alt={`Guía: ${steps[currentStep].title}`}
+                  className="w-full rounded-lg"
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23f0f0f0'%3E%3Cpath d='M75,50 L25,50 M50,25 L50,75' stroke='%23cccccc' stroke-width='4'/%3E%3C/svg%3E";
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "No se pudo cargar la imagen de guía"
+                    });
+                  }}
+                />
+                
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-tr-md">
+                  FOTO DE EJEMPLO
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-3 sm:p-4 flex flex-col items-center z-50">
+            <Button
+              onClick={handleOpenCamera}
+              className="w-full h-12 sm:h-14 mb-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg"
+            >
+              <Camera className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+              Tomar Foto
+            </Button>
+            
+            <Button
+              onClick={handleVoiceInstructions}
+              variant="outline"
+              className="w-full h-9 sm:h-10 mb-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
+              disabled={isPlayingVoice}
+            >
+              <Headphones className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              Instrucciones por Voz
+            </Button>
+
+            {photos.length > 0 && (
+              <Button
                 onClick={() => setShowPhotoGallery(true)}
                 variant="outline"
+                className="w-full h-9 sm:h-10 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
               >
-                <Images className="w-5 h-5 mr-2" />
-                Ver todas las fotos ({photos.length})
+                <Images className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                Ver Fotos Tomadas ({photos.length}/{totalSteps})
               </Button>
-            </div>
-          )}
+            )}
+
+            {steps[currentStep]?.optional && (
+              <Button
+                onClick={handleSkipStep}
+                variant="ghost"
+                className="mt-1 sm:mt-2 text-gray-500 hover:text-gray-700"
+                size="sm"
+              >
+                <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                Omitir paso (opcional)
+              </Button>
+            )}
+          </div>
         </div>
       )}
-      
+
       <Dialog open={showPhotoConfirmDialog} onOpenChange={setShowPhotoConfirmDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirmar foto</DialogTitle>
+            <DialogTitle>¿La foto se tomó correctamente?</DialogTitle>
             <DialogDescription>
-              ¿La foto es clara y muestra correctamente lo que necesitas?
+              Verifica que la imagen sea clara y cumpla con los requisitos
             </DialogDescription>
           </DialogHeader>
           
-          {currentPhotoData && (
-            <div className="flex justify-center my-2">
-              <img 
-                src={currentPhotoData} 
-                alt="Foto capturada" 
-                className="max-h-60 rounded-md"
-              />
-            </div>
-          )}
+          <img 
+            src={currentPhotoData} 
+            alt="Foto capturada" 
+            className="rounded-lg shadow-md w-full"
+          />
           
-          <DialogFooter className="flex-col sm:flex-row sm:justify-between gap-2">
+          <DialogFooter className="flex flex-row justify-between sm:justify-between gap-2">
             <Button 
-              onClick={rejectPhoto} 
-              variant="outline"
-              className="sm:flex-1"
+              type="button" 
+              variant="destructive" 
+              onClick={rejectPhoto}
+              className="flex-1"
             >
-              <X className="w-5 h-5 mr-2" />
-              Repetir
+              <X className="w-4 h-4 mr-2" />
+              No, volver a tomar
             </Button>
             <Button 
+              type="button" 
               onClick={confirmPhoto}
-              className="sm:flex-1"
+              className="flex-1 bg-green-600 hover:bg-green-700"
             >
-              <Check className="w-5 h-5 mr-2" />
-              Confirmar
+              <Check className="w-4 h-4 mr-2" />
+              Sí, continuar
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPhotoGallery} onOpenChange={setShowPhotoGallery}>
+        <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Revisión de Fotos</DialogTitle>
+            <DialogDescription>
+              Revisa todas las fotos capturadas. Puedes volver a tomar cualquier foto si es necesario.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {photos.map((photo, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-2 relative">
+                <img 
+                  src={photo} 
+                  alt={`${index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}`} 
+                  className="rounded-lg shadow-sm w-full"
+                />
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-sm font-medium">
+                    <span className="font-bold">{index + 1}/{photos.length}:</span> {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
+                  </p>
+                  <Button 
+                    onClick={() => handleRetakePhoto(index)} 
+                    size="sm" 
+                    variant="outline"
+                    className="text-xs"
+                  >
+                    <RotateCcw className="w-3 h-3 mr-1" />
+                    Volver a tomar
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <DialogFooter>
+            {photos.length < totalSteps ? (
+              <Button 
+                onClick={() => setShowPhotoGallery(false)}
+                className="w-full"
+              >
+                Continuar tomando fotos ({photos.length}/{totalSteps})
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleComplete}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Enviar todas las fotos
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
