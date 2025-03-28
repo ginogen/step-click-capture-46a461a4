@@ -16,17 +16,17 @@ const AUTO_COVERAGE_TYPES = [
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 8,
+    requiredPhotos: 6,
   },
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 10,
+    requiredPhotos: 8,
   },
   {
     id: "terceros_completo_todo_riesgo",
     name: "Terceros Completo / Todo Riesgo",
-    requiredPhotos: 13,
+    requiredPhotos: 10,
   },
 ];
 
@@ -64,10 +64,8 @@ const CoverageSelection = () => {
   };
 
   const handleCoverageSelect = (coverage: string) => {
-    // Guardar el tipo de cobertura seleccionado en sessionStorage
     sessionStorage.setItem("coverageType", coverage);
     
-    // Determinar el nombre de la cobertura seleccionada
     const allCoverages = [...AUTO_COVERAGE_TYPES, ...OTHER_COVERAGE_TYPES];
     const coverageItem = allCoverages.find(type => type.id === coverage);
     
@@ -80,10 +78,7 @@ const CoverageSelection = () => {
   };
 
   const continueToAutoCoberages = () => {
-    // Close the modal and keep the auto category selected
     setShowAutoModal(false);
-    // Keep the auto category selected to show the auto coverage options
-    // No need to reset selectedCategory here
   };
 
   return (
