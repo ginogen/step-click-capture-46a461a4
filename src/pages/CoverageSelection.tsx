@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Dialog, 
   DialogContent, 
@@ -66,13 +66,7 @@ const CoverageSelection = () => {
   const handleCoverageSelect = (coverage: string) => {
     sessionStorage.setItem("coverageType", coverage);
     
-    const allCoverages = [...AUTO_COVERAGE_TYPES, ...OTHER_COVERAGE_TYPES];
-    const coverageItem = allCoverages.find(type => type.id === coverage);
-    
-    toast({
-      title: "Cobertura seleccionada",
-      description: `Has elegido la cobertura: ${coverageItem?.name}`
-    });
+    // Removing the toast notification here
     
     navigate("/process");
   };
