@@ -430,9 +430,10 @@ const Process = () => {
   }, [currentStep, steps]);
 
   const requestLocationPermission = () => {
+    if (locationReceived) return;
+    
     setIsGettingLocation(true);
     setPermissionDenied(false);
-    setLocationReceived(false);
     
     if (!navigator.geolocation) {
       setUserLocation("Geolocalización no soportada en este dispositivo");
@@ -510,7 +511,9 @@ const Process = () => {
         videoRef.current.srcObject = stream;
       }
       
-      requestLocationPermission();
+      if (!locationReceived) {
+        requestLocationPermission();
+      }
       
     } catch (error) {
       toast({
