@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw, Volume2, VolumeX } from "lucide-react";
@@ -637,6 +636,9 @@ const Process = () => {
     setHasGNC(hasGNCInstalled);
     
     if (!hasGNCInstalled) {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep(steps.length - 1);
+      }
       setShowPhotoGallery(true);
     }
   };
