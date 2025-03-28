@@ -713,7 +713,16 @@ const Process = () => {
         description: `Has omitido el paso: ${steps[currentStep]?.title}`,
       });
       
-      if (currentStep < steps.length - 1) {
+      const isGNCStep = steps[currentStep]?.title?.includes("GNC");
+      
+      if (isGNCStep) {
+        setHasGNC(false);
+        
+        if (currentStep < steps.length - 1) {
+          setCurrentStep(steps.length - 1);
+        }
+        setShowPhotoGallery(true);
+      } else if (currentStep < steps.length - 1) {
         setCurrentStep(currentStep + 1);
       } else {
         setShowPhotoGallery(true);
@@ -984,7 +993,7 @@ const Process = () => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
+          <div className="space-y-4 py-4 overflow-y-auto" style={{ maxHeight: "calc(70vh - 150px)" }}>
             {photos.map((photo, index) => (
               <div key={index} className="border border-gray-200 rounded-lg p-2 relative">
                 <img 
@@ -1010,7 +1019,7 @@ const Process = () => {
             ))}
           </div>
           
-          <DialogFooter>
+          <div className="sticky bottom-0 pt-3 bg-white border-t border-gray-200">
             {photos.length < totalSteps ? (
               <Button 
                 onClick={() => setShowPhotoGallery(false)}
@@ -1027,7 +1036,7 @@ const Process = () => {
                 Enviar todas las fotos
               </Button>
             )}
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
