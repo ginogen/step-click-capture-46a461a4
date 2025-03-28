@@ -16,17 +16,17 @@ const AUTO_COVERAGE_TYPES = [
   {
     id: "responsabilidad_civil",
     name: "Responsabilidad Civil",
-    requiredPhotos: 6,
+    requiredPhotos: 8,
   },
   {
     id: "intermedia",
     name: "Intermedia",
-    requiredPhotos: 8,
+    requiredPhotos: 10,
   },
   {
     id: "terceros_completo_todo_riesgo",
     name: "Terceros Completo / Todo Riesgo",
-    requiredPhotos: 10,
+    requiredPhotos: 13,
   },
 ];
 
@@ -71,7 +71,10 @@ const CoverageSelection = () => {
     const allCoverages = [...AUTO_COVERAGE_TYPES, ...OTHER_COVERAGE_TYPES];
     const coverageItem = allCoverages.find(type => type.id === coverage);
     
-    // Eliminamos el toast que indica la cobertura seleccionada
+    toast({
+      title: "Cobertura seleccionada",
+      description: `Has elegido la cobertura: ${coverageItem?.name}`
+    });
     
     navigate("/process");
   };
