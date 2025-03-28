@@ -53,54 +53,54 @@ const GUIDE_IMAGES = {
     {
       url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
       title: "ADELANTE",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
       title: "ATRAS",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
       title: "LATERAL DERECHO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
       title: "LATERAL IZQUIERDO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Capturar claramente los kilómetros del vehículo."
+      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
     }
   ],
   intermedia: [
     {
       url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
       title: "ADELANTE",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
       title: "ATRAS",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
       title: "LATERAL DERECHO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
       title: "LATERAL IZQUIERDO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Capturar claramente los kilómetros del vehículo."
+      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
     },
     {
       url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
@@ -117,27 +117,27 @@ const GUIDE_IMAGES = {
     {
       url: "/lovable-uploads/e4843260-f3a2-4e17-b76a-f3c89ba82d0b.png",
       title: "ADELANTE",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png",
       title: "ATRAS",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/ba8d6def-06a6-4d4b-bcf3-09ebd003304f.png",
       title: "LATERAL DERECHO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/a2ce5578-49d5-45de-9792-1925c918b841.png",
       title: "LATERAL IZQUIERDO",
-      instruction: "Corroborar que el vehículo no salga cortado."
+      instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Capturar claramente los kilómetros del vehículo."
+      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
     },
     {
       url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
