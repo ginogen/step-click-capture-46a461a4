@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw, Volume2, VolumeX } from "lucide-react";
@@ -74,7 +73,7 @@ const GUIDE_IMAGES = {
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
+      instruction: "Capturar claramente los kilómetros del vehículo."
     }
   ],
   intermedia: [
@@ -101,12 +100,7 @@ const GUIDE_IMAGES = {
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
-    },
-    {
-      url: "/lovable-uploads/7721fb43-8d1b-4586-8d9b-01a0043a355b.png",
-      title: "DEL TABLERO",
-      instruction: "Se saca desde la puerta enfocando en diagonal."
+      instruction: "Capturar claramente los kilómetros del vehículo."
     },
     {
       url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
@@ -143,7 +137,7 @@ const GUIDE_IMAGES = {
     {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
-      instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
+      instruction: "Capturar claramente los kilómetros del vehículo."
     },
     {
       url: "/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png",
@@ -805,299 +799,11 @@ const Process = () => {
               </div>
             </div>
           )}
-          
-          <div className="fixed top-4 right-4 flex space-x-2">
-            <Button
-              variant="outline" 
-              size="icon"
-              className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
-              onClick={toggleVoiceInstructions}
-            >
-              {autoVoiceInstructions ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-            </Button>
-            
-            <Button
-              variant="outline" 
-              size="icon"
-              className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
-              onClick={() => setShowCamera(false)}
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-          
-          <div className="fixed bottom-32 left-4">
-            {steps[currentStep]?.optional && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
-                onClick={handleSkipStep}
-              >
-                Omitir paso
-              </Button>
-            )}
-          </div>
-          
-          <div className="fixed bottom-32 right-4">
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-black bg-opacity-50 text-white hover:bg-black hover:bg-opacity-70"
-              onClick={handleVoiceInstructions}
-              disabled={isPlayingVoice}
-            >
-              <Headphones className="w-4 h-4 mr-1" />
-              Escuchar
-            </Button>
-          </div>
         </div>
       ) : (
-        <div className="container mx-auto max-w-2xl">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Inspección</h1>
-            
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleChangeCoverage}
-              >
-                Cambiar cobertura
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={toggleVoiceInstructions}
-                className={autoVoiceInstructions ? "bg-green-50 text-green-600" : ""}
-              >
-                {autoVoiceInstructions ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-              </Button>
-            </div>
-          </div>
-          
-          {selectedCoverage && (
-            <div className="mb-6 p-4 bg-white rounded-lg shadow-sm">
-              <h2 className="text-lg font-medium">{selectedCoverage.name}</h2>
-              <p className="text-sm text-gray-500">Fotos requeridas: {selectedCoverage.requiredPhotos}</p>
-            </div>
-          )}
-          
-          {showPhotoGallery ? (
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Galería de fotos</h2>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowPhotoGallery(false)}
-                >
-                  Volver
-                </Button>
-              </div>
-              
-              <div className="space-y-6">
-                {photos.map((photo, index) => (
-                  <div key={index} className="border rounded-lg overflow-hidden">
-                    <div className="p-2 bg-gray-50 border-b flex justify-between items-center">
-                      <span className="font-medium">
-                        {index < steps.length ? steps[index]?.title : `Foto ${index + 1}`}
-                      </span>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => handleRetakePhoto(index)}
-                      >
-                        <RotateCcw className="w-4 h-4 mr-1" />
-                        Volver a tomar
-                      </Button>
-                    </div>
-                    <img 
-                      src={photo} 
-                      alt={`Foto ${index + 1}`}
-                      className="w-full object-contain max-h-80"
-                    />
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 flex justify-end">
-                <Button onClick={handleComplete}>
-                  <Check className="w-4 h-4 mr-2" />
-                  Finalizar inspección
-                </Button>
-              </div>
-            </div>
-          ) : showPhotoConfirmDialog ? (
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <h2 className="text-lg font-semibold mb-4">¿Confirmar esta foto?</h2>
-              
-              <div className="border rounded-lg overflow-hidden mb-4">
-                <div className="p-2 bg-gray-50 border-b">
-                  <span className="font-medium">
-                    {steps[currentStep]?.title || `Foto ${currentStep + 1}`}
-                  </span>
-                </div>
-                {currentPhotoData && (
-                  <img 
-                    src={currentPhotoData} 
-                    alt="Foto capturada"
-                    className="w-full object-contain max-h-80"
-                  />
-                )}
-              </div>
-              
-              <div className="flex space-x-2 justify-end">
-                <Button 
-                  variant="outline" 
-                  onClick={rejectPhoto}
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Volver a tomar
-                </Button>
-                <Button 
-                  onClick={confirmPhoto}
-                >
-                  <Check className="w-4 h-4 mr-2" />
-                  Confirmar
-                </Button>
-              </div>
-            </div>
-          ) : steps[currentStep]?.title?.includes("GNC") && hasGNC === null ? (
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <h2 className="text-lg font-semibold mb-4">¿Tu vehículo tiene instalación de GNC?</h2>
-              
-              <div className="flex space-x-2 justify-center">
-                <Button 
-                  variant="outline" 
-                  onClick={() => handleGNCResponse(false)}
-                >
-                  No
-                </Button>
-                <Button 
-                  onClick={() => handleGNCResponse(true)}
-                >
-                  Sí, tiene GNC
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <Stepper steps={totalSteps} currentStep={currentStep} />
-              
-              <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
-                {steps[currentStep]?.guideImage ? (
-                  <div className="flex flex-col sm:flex-row items-center mb-4">
-                    <div className="sm:w-1/2 mb-4 sm:mb-0 sm:mr-4">
-                      <img 
-                        src={steps[currentStep].guideImage} 
-                        alt="Imagen de guía"
-                        className="w-full rounded border"
-                      />
-                    </div>
-                    
-                    <div className="sm:w-1/2">
-                      <h2 className="text-lg font-semibold">{steps[currentStep]?.title}</h2>
-                      <p className="text-gray-600 mb-4">{steps[currentStep]?.instruction}</p>
-                      
-                      <Button 
-                        onClick={handleOpenCamera}
-                        className="w-full"
-                      >
-                        <Camera className="w-4 h-4 mr-2" />
-                        Tomar foto
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <h2 className="text-lg font-semibold mb-2">
-                      {steps[currentStep]?.title || `Paso ${currentStep + 1}`}
-                    </h2>
-                    
-                    <div className="flex justify-center mb-4">
-                      {steps[currentStep]?.icon || <Camera className="w-12 h-12 text-gray-400" />}
-                    </div>
-                    
-                    <p className="text-gray-600 mb-6">
-                      {steps[currentStep]?.instruction || "Toma una foto clara siguiendo las instrucciones"}
-                    </p>
-                    
-                    <Button 
-                      onClick={handleOpenCamera}
-                      className="w-full sm:w-auto"
-                    >
-                      <Camera className="w-4 h-4 mr-2" />
-                      Tomar foto
-                    </Button>
-                    
-                    {steps[currentStep]?.optional && (
-                      <Button 
-                        variant="outline"
-                        onClick={handleSkipStep}
-                        className="w-full sm:w-auto mt-2 sm:ml-2"
-                      >
-                        Omitir paso
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              {photos.length > 0 && (
-                <div className="mb-6">
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => setShowPhotoGallery(true)}
-                  >
-                    <Images className="w-4 h-4 mr-2" />
-                    Ver fotos ({photos.length}/{totalSteps})
-                  </Button>
-                </div>
-              )}
-              
-              <div className="bg-white rounded-lg shadow-sm p-4">
-                <h3 className="text-md font-medium mb-2">¿Necesitas ayuda?</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Si tienes alguna duda durante el proceso de inspección, no dudes en contactarnos.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => {
-                    // Show help dialog or contact options
-                    toast({
-                      title: "Soporte",
-                      description: "Puedes llamarnos al 0800-123-4567 para recibir asistencia."
-                    });
-                  }}
-                >
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Obtener ayuda
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-      
-      <Dialog open={isGettingLocation && !showCamera && !locationReceived}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Obteniendo ubicación</DialogTitle>
-            <DialogDescription>
-              Por favor, espera mientras obtenemos tu ubicación. Esto es necesario para continuar con la inspección.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-center items-center py-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-};
-
-export default Process;
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex justify-between items-center mb-2 sm:mb-4">
+            <img 
+              src={COMPANY_LOGO} 
+              alt="Logo Cazalá Seguros" 
+              className="h
