@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -52,15 +51,17 @@ const Landing = () => {
           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-200 rounded-full opacity-20 blur-3xl"></div>
           
+          {/* Logo centrado y más grande */}
+          <div className="flex justify-center mb-12">
+            <img 
+              src="/lovable-uploads/27192956-82c7-4b08-8db2-8cdb0aafc7ea.png" 
+              alt="Autentika Logo" 
+              className="h-28"
+            />
+          </div>
+          
           <div className="flex flex-col md:flex-row items-center justify-between relative z-10">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <div className="flex items-center mb-10">
-                <img 
-                  src="/lovable-uploads/27192956-82c7-4b08-8db2-8cdb0aafc7ea.png" 
-                  alt="Autentika Logo" 
-                  className="h-16 float"
-                />
-              </div>
+            <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-navy-900 mb-6 leading-tight">
                 <span className="inline-block fadeInUp delay-100">La forma más segura</span> <br />
                 <span className="inline-block fadeInUp delay-200">de recibir fotos</span> <br />
@@ -69,20 +70,17 @@ const Landing = () => {
               <p className="text-xl text-slate-700 mb-8 fadeInUp delay-400">
                 Evita fraudes y falsificaciones al momento de emitir una póliza.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 fadeInUp delay-500">
+              <div className="flex justify-center md:justify-start fadeInUp delay-500">
                 <Link to="/welcome">
                   <Button size="lg" className="relative overflow-hidden group bg-navy-900 hover:bg-navy-800 text-white">
                     <span className="relative z-10">Solicitar Demo</span>
                     <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="border-navy-900 text-navy-900 hover:bg-navy-900 hover:text-white transition-colors duration-300">
-                  Más Información
-                </Button>
               </div>
             </div>
             <div className="md:w-1/2">
-              <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 border border-slate-200 float transition-all duration-500 hover:shadow-blue-100">
+              <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 border border-slate-200 transition-all duration-500 hover:shadow-blue-100">
                 <img 
                   src="/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png" 
                   alt="Demostración de la Aplicación" 
