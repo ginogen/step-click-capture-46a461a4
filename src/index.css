@@ -26,6 +26,11 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     
+    /* Colors for Cazalá */
+    --cazala-blue: 215 70% 40%;
+    --cazala-light-blue: 200 80% 70%;
+    --cazala-dark-blue: 215 70% 25%;
+    
     /* Navy colors for the landing page */
     --navy-50: 215 30% 95%;
     --navy-100: 215 30% 90%;
@@ -42,6 +47,19 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+
+/* Apply fonts */
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Raleway', sans-serif;
 }
 
 /* Animaciones para transiciones */
@@ -191,4 +209,46 @@
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+/* Cazalá specific colors */
+.cazala-blue {
+  color: hsl(var(--cazala-blue));
+}
+
+.bg-cazala-blue {
+  background-color: hsl(var(--cazala-blue));
+}
+
+.cazala-light-blue {
+  color: hsl(var(--cazala-light-blue));
+}
+
+.bg-cazala-light-blue {
+  background-color: hsl(var(--cazala-light-blue));
+}
+
+.cazala-gradient {
+  background: linear-gradient(135deg, hsl(var(--cazala-blue)) 0%, hsl(var(--cazala-dark-blue)) 100%);
+}
+
+/* Mobile app style shadows */
+.app-shadow {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Enhanced button styles */
+.btn-cazala {
+  background-color: hsl(var(--cazala-blue));
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cazala:hover {
+  background-color: hsl(var(--cazala-dark-blue));
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }

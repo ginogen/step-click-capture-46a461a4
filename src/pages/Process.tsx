@@ -277,7 +277,7 @@ const BUILDING_INSTRUCTIONS = {
   ]
 };
 
-const COMPANY_LOGO = "/lovable-uploads/5650f025-4ab5-4874-8ea6-a4502a7c6683.png";
+const COMPANY_LOGO = "/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png";
 
 const generateStepsForCoverage = (coverageType) => {
   const { requiredPhotos } = COVERAGE_TYPES.find(
@@ -782,7 +782,7 @@ const Process = () => {
   };
 
   return (
-    <div className="min-h-screen p-2 sm:p-4 pb-32 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen p-2 sm:p-4 pb-32 bg-white">
       {showCamera ? (
         <div className="relative w-full max-w-lg mx-auto">
           <video 
@@ -867,23 +867,23 @@ const Process = () => {
 
           <div className="text-center mt-4 sm:mt-6">
             <div className="flex flex-col items-center">
-              <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
+              <h3 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
                 {steps[currentStep]?.icon && (
                   <span className="text-gray-700">{steps[currentStep]?.icon}</span>
                 )}
                 {steps[currentStep]?.title}
               </h3>
               
-              <div className="mt-3 p-4 sm:p-5 bg-blue-100 rounded-lg w-full max-w-md border border-blue-200 shadow-sm">
-                <p className="font-bold text-left text-base sm:text-lg mb-2 sm:mb-3">Instrucciones para tomar la foto:</p>
-                <p className="text-gray-700 text-left text-base sm:text-base p-3 sm:p-4 bg-blue-50 rounded border border-blue-200">
+              <div className="mt-4 p-4 sm:p-5 bg-blue-50 rounded-lg w-full max-w-md border border-blue-100 shadow-sm">
+                <p className="font-bold text-left text-base sm:text-lg mb-3 sm:mb-4">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left text-base sm:text-base p-3 sm:p-4 bg-white rounded border border-blue-100">
                   {steps[currentStep]?.instruction}
                 </p>
               </div>
             </div>
 
             {steps[currentStep]?.guideImage && (
-              <div className="relative border-2 border-gray-300 rounded-lg mt-4 sm:mt-6 mx-auto max-w-sm">
+              <div className="relative border-2 border-gray-200 rounded-lg mt-5 sm:mt-6 mx-auto max-w-sm">
                 <img 
                   src={steps[currentStep].guideImage} 
                   alt={`Guía: ${steps[currentStep].title}`}

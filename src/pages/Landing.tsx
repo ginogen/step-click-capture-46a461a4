@@ -75,8 +75,8 @@ const Landing = () => {
           {/* Logo centrado y más grande */}
           <div className="flex justify-center mb-12">
             <img 
-              src="/lovable-uploads/27192956-82c7-4b08-8db2-8cdb0aafc7ea.png" 
-              alt="Autentika Logo" 
+              src="/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png" 
+              alt="Cazalá Logo" 
               className="h-28"
             />
           </div>
@@ -101,11 +101,11 @@ const Landing = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              {/* Removed white background and container styling */}
+              {/* Imagen principal de la app */}
               <img 
-                src="/lovable-uploads/1c92007a-59d3-4fc5-9bf2-dc8ff1c92974.png" 
+                src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" 
                 alt="Demostración de la Aplicación" 
-                className="w-full h-auto rounded-lg"
+                className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto"
               />
             </div>
           </div>
@@ -240,9 +240,9 @@ const Landing = () => {
 
             <div className="rounded-xl overflow-hidden drop-shadow-2xl">
               <img 
-                src="/lovable-uploads/c1d42b7a-be06-4e00-a4ab-df124fe8bc7f.png" 
+                src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" 
                 alt="Proceso de la aplicación" 
-                className="w-full h-auto rounded-lg shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)]"
+                className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto"
               />
             </div>
           </div>
@@ -415,13 +415,13 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
             <img 
-              src="/lovable-uploads/27192956-82c7-4b08-8db2-8cdb0aafc7ea.png" 
-              alt="Autentika Logo" 
+              src="/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png" 
+              alt="Cazalá Logo" 
               className="h-12"
             />
           </div>
           <div className="text-slate-600 text-sm">
-            © {new Date().getFullYear()} Autentika. Todos los derechos reservados.
+            © {new Date().getFullYear()} Cazalá Seguros. Todos los derechos reservados.
           </div>
         </div>
       </footer>
