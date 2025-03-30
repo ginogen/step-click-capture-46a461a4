@@ -357,7 +357,7 @@ const Landing = () => {
       <footer className="bg-slate-100 py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <img src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" alt="Cazalá Logo" className="h-12 transparent-bg" />
+            <img alt="Cazalá Logo" className="h-12 transparent-bg" src="/lovable-uploads/5bdd74f9-9f49-40f2-a96a-65b25d00d707.png" />
           </div>
           <div className="text-slate-600 text-sm">
             © {new Date().getFullYear()} Cazalá Seguros. Todos los derechos reservados.
