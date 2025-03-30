@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -68,9 +69,9 @@ const Landing = () => {
           
           <div className="flex justify-center mb-12">
             <img 
-              src="/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png" 
+              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
               alt="Cazalá Logo" 
-              className="h-28"
+              className="h-28 transparent-bg"
             />
           </div>
           
@@ -97,8 +98,7 @@ const Landing = () => {
               <img 
                 src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" 
                 alt="Demostración de la Aplicación" 
-                className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto drop-shadow-2xl"
-                style={{ background: 'transparent' }}
+                className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto drop-shadow-2xl transparent-bg"
               />
             </div>
           </div>
@@ -230,10 +230,9 @@ const Landing = () => {
 
             <div className="rounded-xl overflow-hidden drop-shadow-2xl">
               <img 
-                src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" 
+                src="/lovable-uploads/95beaf30-e1ea-4d56-8db5-2a942d4e0750.png" 
                 alt="Proceso de la aplicación" 
-                className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto"
-                style={{ background: 'transparent' }}
+                className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto transparent-bg"
               />
             </div>
           </div>
@@ -400,9 +399,9 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
             <img 
-              src="/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png" 
+              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
               alt="Cazalá Logo" 
-              className="h-12"
+              className="h-12 transparent-bg"
             />
           </div>
           <div className="text-slate-600 text-sm">
