@@ -62,7 +62,7 @@ const Landing = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              <img src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" alt="Demostración de la Aplicación" className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto drop-shadow-2xl transparent-bg" />
+              <img src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" alt="Demostración de la Aplicación" className="w-full h-auto app-shadow max-w-sm mx-auto drop-shadow-2xl transparent-bg" />
             </div>
           </div>
         </div>
