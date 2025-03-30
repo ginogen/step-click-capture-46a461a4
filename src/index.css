@@ -44,6 +44,7 @@
   }
 }
 
+/* Animaciones para transiciones */
 .step-enter {
   opacity: 0;
   transform: translateX(100%);
@@ -102,4 +103,92 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Efectos de animación para la landing page */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* Gradientes para la landing page */
+.gradient-hero {
+  background: linear-gradient(135deg, #f6f9fc 0%, #eaf2fb 100%);
+}
+
+.gradient-navy {
+  background: linear-gradient(135deg, hsl(215, 70%, 20%) 0%, hsl(215, 70%, 15%) 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gradient-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gradient-cta {
+  background: linear-gradient(135deg, hsl(215, 70%, 25%) 0%, hsl(215, 70%, 15%) 100%);
+}
+
+.feature-icon-bg {
+  background: linear-gradient(135deg, #e0ecfc 0%, #c9d9f8 100%);
+}
+
+/* Efecto glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
 }
