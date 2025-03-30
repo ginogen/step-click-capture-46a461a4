@@ -25,6 +25,12 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+    
+    /* Navy colors for the landing page */
+    --navy-50: 215 30% 95%;
+    --navy-100: 215 30% 90%;
+    --navy-800: 215 70% 20%;
+    --navy-900: 215 70% 15%;
   }
 }
 
@@ -97,4 +103,3 @@
   height: 100%;
   object-fit: cover;
 }
-
