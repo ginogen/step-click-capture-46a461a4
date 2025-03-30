@@ -129,12 +129,58 @@
   }
 }
 
+/* Nuevas animaciones para aparición al scroll */
+@keyframes fadeInOnScroll {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-reveal {
+  visibility: hidden;
+}
+
 .fadeInUp {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .float {
   animation: float 4s ease-in-out infinite;
+}
+
+/* Nuevas clases para elementos que aparecen al hacer scroll */
+.fade-in-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in-on-scroll.fadeInUp {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-on-scroll-delay-200 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.fade-in-on-scroll-delay-400 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+}
+
+.fade-in-on-scroll-delay-600 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
 }
 
 .delay-100 {
@@ -157,31 +203,130 @@
   animation-delay: 0.5s;
 }
 
-/* Gradientes para la landing page */
+/* Gradientes modernos para la landing page */
 .gradient-hero {
   background: linear-gradient(135deg, #f6f9fc 0%, #eaf2fb 100%);
+}
+
+.modern-gradient-blue {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e1eeff 100%);
+  position: relative;
+}
+
+.modern-gradient-blue::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+}
+
+.modern-gradient-blue::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+}
+
+.blue-gradient-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f5f9ff 100%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.blue-gradient-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.1);
 }
 
 .gradient-navy {
   background: linear-gradient(135deg, hsl(215, 70%, 20%) 0%, hsl(215, 70%, 15%) 100%);
 }
 
-.gradient-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.blue-number-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
 }
 
-.gradient-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+.feature-icon-shine {
+  background: linear-gradient(135deg, #e6f3ff 0%, #c5e1ff 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.gradient-cta {
-  background: linear-gradient(135deg, hsl(215, 70%, 25%) 0%, hsl(215, 70%, 15%) 100%);
+.feature-icon-shine::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shine 3s infinite linear;
 }
 
-.feature-icon-bg {
-  background: linear-gradient(135deg, #e0ecfc 0%, #c9d9f8 100%);
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(30deg);
+  }
+}
+
+.blue-cta-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  position: relative;
+}
+
+.blue-cta-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+/* Botón con gradiente azul */
+.bg-blue-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+}
+
+/* Nuevos estilos para sombras y efectos de brillos */
+.shadow-blue-glow {
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.05);
+}
+
+.shadow-blue-large {
+  box-shadow: 0 20px 60px -10px rgba(37, 99, 235, 0.25), 0 15px 20px -12px rgba(37, 99, 235, 0.2);
+}
+
+/* Animación para entrada suave */
+.animate-fade-in {
+  animation: fadeInAnimation 1s ease-out forwards;
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Efecto glassmorphism */

@@ -66,18 +66,18 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section con gradiente */}
-      <section className="gradient-hero py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="modern-gradient-blue py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
           {/* Elementos decorativos en el fondo */}
           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-200 rounded-full opacity-20 blur-3xl"></div>
           
-          {/* Logo centrado y más grande */}
-          <div className="flex justify-center mb-12">
+          {/* Logo centrado y mucho más grande */}
+          <div className="flex justify-center mb-16">
             <img 
               src="/lovable-uploads/27192956-82c7-4b08-8db2-8cdb0aafc7ea.png" 
               alt="Autentika Logo" 
-              className="h-28"
+              className="h-40 md:h-48 lg:h-56 animate-fade-in"
             />
           </div>
           
@@ -93,7 +93,7 @@ const Landing = () => {
               </p>
               <div className="flex justify-center md:justify-start fadeInUp delay-500">
                 <Link to="/welcome">
-                  <Button size="lg" className="relative overflow-hidden group bg-navy-900 hover:bg-navy-800 text-white">
+                  <Button size="lg" className="relative overflow-hidden group bg-blue-gradient hover:opacity-90 text-white">
                     <span className="relative z-10">Solicitar Demo</span>
                     <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
                   </Button>
@@ -101,11 +101,10 @@ const Landing = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              {/* Removed white background and container styling */}
               <img 
                 src="/lovable-uploads/1c92007a-59d3-4fc5-9bf2-dc8ff1c92974.png" 
                 alt="Demostración de la Aplicación" 
-                className="w-full h-auto rounded-lg"
+                className="w-full h-auto fade-in-on-scroll rounded-lg"
               />
             </div>
           </div>
@@ -121,7 +120,7 @@ const Landing = () => {
 
       {/* Features Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto scroll-reveal">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
               📸 Fotos en tiempo real, sin trampas
@@ -133,11 +132,11 @@ const Landing = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="gradient-card rounded-xl overflow-hidden border-none">
+            <Card className="blue-gradient-card rounded-xl overflow-hidden border-none shadow-blue-glow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-4">
-                    <MapPinned className="h-7 w-7 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-4">
+                    <MapPinned className="h-7 w-7 text-blue-600" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Ubicación en tiempo real</h3>
@@ -147,11 +146,11 @@ const Landing = () => {
               </CardContent>
             </Card>
 
-            <Card className="gradient-card rounded-xl overflow-hidden border-none">
+            <Card className="blue-gradient-card rounded-xl overflow-hidden border-none shadow-blue-glow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-4">
-                    <Clock3 className="h-7 w-7 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-4">
+                    <Clock3 className="h-7 w-7 text-blue-600" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Fecha y hora exacta</h3>
@@ -161,11 +160,11 @@ const Landing = () => {
               </CardContent>
             </Card>
 
-            <Card className="gradient-card rounded-xl overflow-hidden border-none">
+            <Card className="blue-gradient-card rounded-xl overflow-hidden border-none shadow-blue-glow">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-4">
-                    <ShieldCheck className="h-7 w-7 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-4">
+                    <ShieldCheck className="h-7 w-7 text-blue-600" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Marca de agua con datos</h3>
@@ -179,8 +178,8 @@ const Landing = () => {
       </section>
 
       {/* How it Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 gradient-hero" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 modern-gradient-blue" ref={addToRefs}>
+        <div className="max-w-7xl mx-auto scroll-reveal">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
               🔐 ¿Cómo funciona?
@@ -189,8 +188,8 @@ const Landing = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
+              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2 fade-in-on-scroll">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full blue-number-gradient text-white font-bold">
                   1
                 </div>
                 <div>
@@ -201,8 +200,8 @@ const Landing = () => {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
+              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2 fade-in-on-scroll-delay-200">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full blue-number-gradient text-white font-bold">
                   2
                 </div>
                 <div>
@@ -213,8 +212,8 @@ const Landing = () => {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
+              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2 fade-in-on-scroll-delay-400">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full blue-number-gradient text-white font-bold">
                   3
                 </div>
                 <div>
@@ -225,8 +224,8 @@ const Landing = () => {
                 </div>
               </div>
 
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
+              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2 fade-in-on-scroll-delay-600">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full blue-number-gradient text-white font-bold">
                   4
                 </div>
                 <div>
@@ -238,11 +237,11 @@ const Landing = () => {
               </div>
             </div>
 
-            <div className="rounded-xl overflow-hidden drop-shadow-2xl">
+            <div className="rounded-xl overflow-hidden drop-shadow-2xl fade-in-on-scroll">
               <img 
                 src="/lovable-uploads/c1d42b7a-be06-4e00-a4ab-df124fe8bc7f.png" 
                 alt="Proceso de la aplicación" 
-                className="w-full h-auto rounded-lg shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)]"
+                className="w-full h-auto rounded-lg shadow-blue-large"
               />
             </div>
           </div>
@@ -251,7 +250,7 @@ const Landing = () => {
 
       {/* Customization Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto scroll-reveal">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
               ✨ Personaliza todo a tu medida
@@ -259,55 +258,55 @@ const Landing = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
+            <Card className="blue-gradient-card shadow-blue-glow border-none rounded-xl fade-in-on-scroll">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <ImageIcon className="h-5 w-5 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-3 mr-3">
+                    <ImageIcon className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="text-lg font-medium">Logo y colores de tu empresa</p>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
+            <Card className="blue-gradient-card shadow-blue-glow border-none rounded-xl fade-in-on-scroll-delay-200">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Globe className="h-5 w-5 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-3 mr-3">
+                    <Globe className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="text-lg font-medium">Tu propio dominio</p>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
+            <Card className="blue-gradient-card shadow-blue-glow border-none rounded-xl fade-in-on-scroll-delay-400">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Camera className="h-5 w-5 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-3 mr-3">
+                    <Camera className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="text-lg font-medium">Cantidad de fotos requeridas</p>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
+            <Card className="blue-gradient-card shadow-blue-glow border-none rounded-xl fade-in-on-scroll-delay-200">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <FileText className="h-5 w-5 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-3 mr-3">
+                    <FileText className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="text-lg font-medium">Instrucciones y ejemplos visuales</p>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
+            <Card className="blue-gradient-card shadow-blue-glow border-none rounded-xl fade-in-on-scroll-delay-400">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Mail className="h-5 w-5 text-navy-900" />
+                  <div className="rounded-full feature-icon-shine p-3 mr-3">
+                    <Mail className="h-5 w-5 text-blue-600" />
                   </div>
                   <p className="text-lg font-medium">Email donde recibir las fotos</p>
                 </div>
@@ -318,8 +317,8 @@ const Landing = () => {
       </section>
 
       {/* Why Use It Section */}
-      <section className="gradient-hero py-20 px-4 sm:px-6 lg:px-8" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
+      <section className="modern-gradient-blue py-20 px-4 sm:px-6 lg:px-8" ref={addToRefs}>
+        <div className="max-w-7xl mx-auto scroll-reveal">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
               🚫 ¿Por qué usarla?
@@ -330,15 +329,15 @@ const Landing = () => {
           </div>
 
           <div className="max-w-3xl mx-auto space-y-4">
-            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-md transition-all duration-300 hover:shadow-xl">
+            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-blue-glow transition-all duration-300 hover:shadow-xl fade-in-on-scroll">
               <AlertTriangle className="h-6 w-6 text-red-500 mt-1 flex-shrink-0" />
               <p className="text-slate-700 font-medium">KMs manipulados</p>
             </div>
-            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-md transition-all duration-300 hover:shadow-xl">
+            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-blue-glow transition-all duration-300 hover:shadow-xl fade-in-on-scroll-delay-200">
               <AlertTriangle className="h-6 w-6 text-red-500 mt-1 flex-shrink-0" />
               <p className="text-slate-700 font-medium">Fotos viejas de ruedas o carrocerías</p>
             </div>
-            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-md transition-all duration-300 hover:shadow-xl">
+            <div className="flex items-start gap-3 bg-white p-5 rounded-xl shadow-blue-glow transition-all duration-300 hover:shadow-xl fade-in-on-scroll-delay-400">
               <AlertTriangle className="h-6 w-6 text-red-500 mt-1 flex-shrink-0" />
               <p className="text-slate-700 font-medium">Imágenes reenviadas o sacadas de internet</p>
             </div>
@@ -348,7 +347,7 @@ const Landing = () => {
 
       {/* Ideal For Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto scroll-reveal">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
               🔧 Ideal para
@@ -356,26 +355,26 @@ const Landing = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
+            <div className="blue-gradient-card p-8 rounded-xl shadow-blue-glow border-none transition-all duration-300 hover:-translate-y-2 fade-in-on-scroll">
               <div className="flex justify-center mb-6">
-                <div className="rounded-full bg-green-100 p-4">
-                  <BadgeCheck className="h-10 w-10 text-green-500" />
+                <div className="rounded-full bg-blue-50 p-4">
+                  <BadgeCheck className="h-10 w-10 text-blue-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Pólizas de automotor</h3>
             </div>
-            <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
+            <div className="blue-gradient-card p-8 rounded-xl shadow-blue-glow border-none transition-all duration-300 hover:-translate-y-2 fade-in-on-scroll-delay-200">
               <div className="flex justify-center mb-6">
-                <div className="rounded-full bg-green-100 p-4">
-                  <BadgeCheck className="h-10 w-10 text-green-500" />
+                <div className="rounded-full bg-blue-50 p-4">
+                  <BadgeCheck className="h-10 w-10 text-blue-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Inspecciones previas</h3>
             </div>
-            <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
+            <div className="blue-gradient-card p-8 rounded-xl shadow-blue-glow border-none transition-all duration-300 hover:-translate-y-2 fade-in-on-scroll-delay-400">
               <div className="flex justify-center mb-6">
-                <div className="rounded-full bg-green-100 p-4">
-                  <BadgeCheck className="h-10 w-10 text-green-500" />
+                <div className="rounded-full bg-blue-50 p-4">
+                  <BadgeCheck className="h-10 w-10 text-blue-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Verificación de condiciones reales</h3>
@@ -385,12 +384,12 @@ const Landing = () => {
       </section>
 
       {/* CTA Section with gradient */}
-      <section className="gradient-navy text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" ref={addToRefs}>
+      <section className="blue-cta-gradient text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" ref={addToRefs}>
         {/* Elementos decorativos en el fondo */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full opacity-5"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full opacity-5"></div>
         
-        <div className="max-w-5xl mx-auto text-center relative z-10">
+        <div className="max-w-5xl mx-auto text-center relative z-10 scroll-reveal">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             💬 ¿Querés ver cómo funciona?
           </h2>
@@ -400,7 +399,7 @@ const Landing = () => {
             Seguridad y transparencia para vos. Tranquilidad para tus clientes.
           </p>
           <Link to="/welcome">
-            <Button size="lg" className="bg-white text-navy-900 hover:bg-slate-100 group relative overflow-hidden">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100 group relative overflow-hidden">
               <span className="relative z-10 flex items-center">
                 Solicitar Demo <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
               </span>
