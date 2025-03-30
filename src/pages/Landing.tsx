@@ -3,7 +3,27 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Camera, MapPin, Clock, Shield, CheckCircle, AlertTriangle, ChevronRight, Globe, Mail, Image, FileText } from "lucide-react";
+import { 
+  Camera, 
+  MapPin, 
+  Clock, 
+  Shield, 
+  CheckCircle, 
+  AlertTriangle, 
+  ChevronRight, 
+  Globe, 
+  Mail, 
+  FileText, 
+  Image as ImageIcon,
+  MessageSquare,
+  Calendar,
+  Lock,
+  ShieldCheck,
+  BadgeCheck,
+  Clock3,
+  MapPinned,
+  ShieldAlert
+} from "lucide-react";
 
 const Landing = () => {
   // Referencias para animaciones al hacer scroll
@@ -81,13 +101,12 @@ const Landing = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 border border-slate-200 transition-all duration-500 hover:shadow-blue-100">
-                <img 
-                  src="/lovable-uploads/1c92007a-59d3-4fc5-9bf2-dc8ff1c92974.png" 
-                  alt="Demostración de la Aplicación" 
-                  className="rounded-lg w-full h-auto shadow-sm"
-                />
-              </div>
+              {/* Removed white background and container styling */}
+              <img 
+                src="/lovable-uploads/1c92007a-59d3-4fc5-9bf2-dc8ff1c92974.png" 
+                alt="Demostración de la Aplicación" 
+                className="w-full h-auto rounded-lg"
+              />
             </div>
           </div>
         </div>
@@ -118,7 +137,7 @@ const Landing = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
                   <div className="rounded-full feature-icon-bg p-4">
-                    <MapPin className="h-7 w-7 text-navy-900" />
+                    <MapPinned className="h-7 w-7 text-navy-900" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Ubicación en tiempo real</h3>
@@ -132,7 +151,7 @@ const Landing = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
                   <div className="rounded-full feature-icon-bg p-4">
-                    <Clock className="h-7 w-7 text-navy-900" />
+                    <Clock3 className="h-7 w-7 text-navy-900" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Fecha y hora exacta</h3>
@@ -146,7 +165,7 @@ const Landing = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-center mb-4">
                   <div className="rounded-full feature-icon-bg p-4">
-                    <Shield className="h-7 w-7 text-navy-900" />
+                    <ShieldCheck className="h-7 w-7 text-navy-900" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-center mb-2">Marca de agua con datos</h3>
@@ -219,11 +238,11 @@ const Landing = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden p-2 float">
+            <div className="rounded-xl overflow-hidden drop-shadow-2xl">
               <img 
                 src="/lovable-uploads/c1d42b7a-be06-4e00-a4ab-df124fe8bc7f.png" 
                 alt="Proceso de la aplicación" 
-                className="w-full h-auto rounded-lg"
+                className="w-full h-auto rounded-lg shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)]"
               />
             </div>
           </div>
@@ -244,7 +263,7 @@ const Landing = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center mb-4">
                   <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Image className="h-5 w-5 text-navy-900" />
+                    <ImageIcon className="h-5 w-5 text-navy-900" />
                   </div>
                   <p className="text-lg font-medium">Logo y colores de tu empresa</p>
                 </div>
@@ -340,7 +359,7 @@ const Landing = () => {
             <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
               <div className="flex justify-center mb-6">
                 <div className="rounded-full bg-green-100 p-4">
-                  <CheckCircle className="h-10 w-10 text-green-500" />
+                  <BadgeCheck className="h-10 w-10 text-green-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Pólizas de automotor</h3>
@@ -348,7 +367,7 @@ const Landing = () => {
             <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
               <div className="flex justify-center mb-6">
                 <div className="rounded-full bg-green-100 p-4">
-                  <CheckCircle className="h-10 w-10 text-green-500" />
+                  <BadgeCheck className="h-10 w-10 text-green-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Inspecciones previas</h3>
@@ -356,7 +375,7 @@ const Landing = () => {
             <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
               <div className="flex justify-center mb-6">
                 <div className="rounded-full bg-green-100 p-4">
-                  <CheckCircle className="h-10 w-10 text-green-500" />
+                  <BadgeCheck className="h-10 w-10 text-green-500" />
                 </div>
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Verificación de condiciones reales</h3>
