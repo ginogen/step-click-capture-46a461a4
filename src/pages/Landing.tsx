@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,7 @@ const Landing = () => {
             <div className="md:w-1/2">
               <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 border border-slate-200 transition-all duration-500 hover:shadow-blue-100">
                 <img 
-                  src="/lovable-uploads/64423287-ec25-48aa-85e4-a5a5c5d7d45c.png" 
+                  src="/lovable-uploads/1c92007a-59d3-4fc5-9bf2-dc8ff1c92974.png" 
                   alt="Demostración de la Aplicación" 
                   className="rounded-lg w-full h-auto shadow-sm"
                 />
@@ -220,7 +221,7 @@ const Landing = () => {
 
             <div className="bg-white rounded-xl shadow-lg overflow-hidden p-2 float">
               <img 
-                src="/lovable-uploads/6a807237-2d40-4015-857d-daa8a6445e9c.png" 
+                src="/lovable-uploads/c1d42b7a-be06-4e00-a4ab-df124fe8bc7f.png" 
                 alt="Proceso de la aplicación" 
                 className="w-full h-auto rounded-lg"
               />
