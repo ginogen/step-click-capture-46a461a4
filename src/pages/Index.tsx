@@ -9,7 +9,7 @@ const Index = () => {
       <header className="w-full py-6 px-4 sm:px-6 lg:px-8 border-b">
         <div className="max-w-7xl mx-auto flex justify-center md:justify-start">
           <img 
-            src="/lovable-uploads/62eccfdc-4004-49e4-8a71-26f0f45ecbf5.png" 
+            src="/lovable-uploads/4a5cef1c-64c8-4458-9d17-9667cb03cec4.png" 
             alt="Autentika Logo" 
             className="h-16 transparent-bg"
           />
@@ -39,7 +39,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
             <img 
-              src="/lovable-uploads/62eccfdc-4004-49e4-8a71-26f0f45ecbf5.png" 
+              src="/lovable-uploads/4a5cef1c-64c8-4458-9d17-9667cb03cec4.png" 
               alt="Autentika Logo" 
               className="h-12 transparent-bg"
             />
