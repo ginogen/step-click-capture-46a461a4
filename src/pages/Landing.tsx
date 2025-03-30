@@ -1,40 +1,16 @@
-
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Camera, 
-  MapPin, 
-  Clock, 
-  Shield, 
-  CheckCircle, 
-  AlertTriangle, 
-  ChevronRight, 
-  Globe, 
-  Mail, 
-  FileText, 
-  Image as ImageIcon,
-  MessageSquare,
-  Calendar,
-  Lock,
-  ShieldCheck,
-  BadgeCheck,
-  Clock3,
-  MapPinned,
-  ShieldAlert
-} from "lucide-react";
-
+import { Camera, MapPin, Clock, Shield, CheckCircle, AlertTriangle, ChevronRight, Globe, Mail, FileText, Image as ImageIcon, MessageSquare, Calendar, Lock, ShieldCheck, BadgeCheck, Clock3, MapPinned, ShieldAlert } from "lucide-react";
 const Landing = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
       rootMargin: "0px 0px -50px 0px"
     };
-
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('fadeInUp');
@@ -42,37 +18,28 @@ const Landing = () => {
         }
       });
     }, observerOptions);
-
     sectionRefs.current.forEach(ref => {
       if (ref) observer.observe(ref);
     });
-
     return () => {
       sectionRefs.current.forEach(ref => {
         if (ref) observer.unobserve(ref);
       });
     };
   }, []);
-
   const addToRefs = (el: HTMLElement | null) => {
     if (el && !sectionRefs.current.includes(el)) {
       sectionRefs.current.push(el);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       <section className="gradient-hero py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
           <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-200 rounded-full opacity-20 blur-3xl"></div>
           
           <div className="flex justify-center mb-12">
-            <img 
-              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
-              alt="Cazalá Logo" 
-              className="h-28 transparent-bg"
-            />
+            <img alt="Cazalá Logo" src="/lovable-uploads/6661f619-d286-486c-9c46-12a04c958bde.png" className="h-40 transparent-bg object-cover" />
           </div>
           
           <div className="flex flex-col md:flex-row items-center justify-between relative z-10">
@@ -95,11 +62,7 @@ const Landing = () => {
               </div>
             </div>
             <div className="md:w-1/2">
-              <img 
-                src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" 
-                alt="Demostración de la Aplicación" 
-                className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto drop-shadow-2xl transparent-bg"
-              />
+              <img src="/lovable-uploads/6adb83f8-3441-4eb7-bb1a-a66765336328.png" alt="Demostración de la Aplicación" className="w-full h-auto rounded-2xl app-shadow max-w-sm mx-auto drop-shadow-2xl transparent-bg" />
             </div>
           </div>
         </div>
@@ -107,7 +70,7 @@ const Landing = () => {
 
       <div className="w-full bg-white">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" className="w-full h-20">
-          <path d="M0 0L48 10.7C96 21.3 192 42.7 288 53.3C384 64 480 64 576 58.7C672 53.3 768 42.7 864 37.3C960 32 1056 32 1152 32C1248 32 1344 32 1392 32L1440 32V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V0Z" fill="#F6F9FC"/>
+          <path d="M0 0L48 10.7C96 21.3 192 42.7 288 53.3C384 64 480 64 576 58.7C672 53.3 768 42.7 864 37.3C960 32 1056 32 1152 32C1248 32 1344 32 1392 32L1440 32V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V0Z" fill="#F6F9FC" />
         </svg>
       </div>
 
@@ -229,11 +192,7 @@ const Landing = () => {
             </div>
 
             <div className="rounded-xl overflow-hidden drop-shadow-2xl">
-              <img 
-                src="/lovable-uploads/95beaf30-e1ea-4d56-8db5-2a942d4e0750.png" 
-                alt="Proceso de la aplicación" 
-                className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto transparent-bg"
-              />
+              <img src="/lovable-uploads/95beaf30-e1ea-4d56-8db5-2a942d4e0750.png" alt="Proceso de la aplicación" className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto transparent-bg" />
             </div>
           </div>
         </div>
@@ -398,19 +357,13 @@ const Landing = () => {
       <footer className="bg-slate-100 py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <img 
-              src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" 
-              alt="Cazalá Logo" 
-              className="h-12 transparent-bg"
-            />
+            <img src="/lovable-uploads/fb99b0fd-7bee-4c1d-b3b5-826ccb42e7e2.png" alt="Cazalá Logo" className="h-12 transparent-bg" />
           </div>
           <div className="text-slate-600 text-sm">
             © {new Date().getFullYear()} Cazalá Seguros. Todos los derechos reservados.
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
