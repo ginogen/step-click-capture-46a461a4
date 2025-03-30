@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Send, HelpCircle, MapPin, Computer, Tv, FireExtinguisher, BellElectric, Refrigerator, X, Headphones, Images, RotateCcw, Volume2, VolumeX } from "lucide-react";
@@ -410,7 +409,7 @@ const Process = () => {
 
   useEffect(() => {
     const logoImg = new Image();
-    logoImg.src = "/lovable-uploads/4306e699-5ec3-410e-a7d4-16e6a1b52a6d.png";
+    logoImg.src = COMPANY_LOGO;
     logoImg.onload = () => {
       logoRef.current = logoImg;
     };
@@ -828,20 +827,20 @@ const Process = () => {
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-6">
-          <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <div className="flex justify-between items-center mb-2 sm:mb-4">
             <img 
-              src="/lovable-uploads/4306e699-5ec3-410e-a7d4-16e6a1b52a6d.png" 
+              src={COMPANY_LOGO} 
               alt="Logo Cazalá Seguros" 
-              className="h-12 sm:h-14 object-contain"
+              className="h-8 sm:h-10 object-contain"
             />
             <div className="flex flex-col items-end">
-              <p className="text-lg font-medium text-gray-800">
-                {COVERAGE_TYPES.find(type => type.id === coverageType)?.name || "Cobertura"}
+              <p className="text-sm font-medium text-gray-800">
+                {selectedCoverage?.name || "Cobertura"}
               </p>
               <Button
                 onClick={handleChangeCoverage}
                 variant="outline"
-                className="text-sm px-2 py-1 h-8 mt-1"
+                className="text-xs px-1.5 py-0.5 h-6 mt-1"
                 size="sm"
               >
                 Cambiar
@@ -850,7 +849,7 @@ const Process = () => {
           </div>
           
           <Stepper 
-            steps={calculateTotalSteps()} 
+            steps={totalSteps} 
             currentStep={currentStep} 
           />
 
@@ -866,25 +865,25 @@ const Process = () => {
             </div>
           </div>
 
-          <div className="text-center mt-6 sm:mt-8">
+          <div className="text-center mt-4 sm:mt-6">
             <div className="flex flex-col items-center">
-              <h3 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
                 {steps[currentStep]?.icon && (
                   <span className="text-gray-700">{steps[currentStep]?.icon}</span>
                 )}
                 {steps[currentStep]?.title}
               </h3>
               
-              <div className="mt-4 p-5 sm:p-6 bg-blue-100 rounded-lg w-full max-w-md border border-blue-200 shadow-sm">
-                <p className="font-bold text-left text-lg sm:text-xl mb-3 sm:mb-4">Instrucciones para tomar la foto:</p>
-                <p className="text-gray-700 text-left text-base sm:text-lg p-4 sm:p-5 bg-blue-50 rounded border border-blue-200">
+              <div className="mt-3 p-4 sm:p-5 bg-blue-100 rounded-lg w-full max-w-md border border-blue-200 shadow-sm">
+                <p className="font-bold text-left text-base sm:text-lg mb-2 sm:mb-3">Instrucciones para tomar la foto:</p>
+                <p className="text-gray-700 text-left text-base sm:text-base p-3 sm:p-4 bg-blue-50 rounded border border-blue-200">
                   {steps[currentStep]?.instruction}
                 </p>
               </div>
             </div>
 
             {steps[currentStep]?.guideImage && (
-              <div className="relative border-2 border-gray-300 rounded-lg mt-6 sm:mt-8 mx-auto max-w-sm shadow-blue-glow">
+              <div className="relative border-2 border-gray-300 rounded-lg mt-4 sm:mt-6 mx-auto max-w-sm">
                 <img 
                   src={steps[currentStep].guideImage} 
                   alt={`Guía: ${steps[currentStep].title}`}
@@ -906,22 +905,22 @@ const Process = () => {
             )}
           </div>
 
-          <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 sm:p-5 flex flex-col items-center z-50">
+          <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-3 sm:p-4 flex flex-col items-center z-50">
             <Button
               onClick={handleOpenCamera}
-              className="w-full h-14 sm:h-16 mb-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg text-lg"
+              className="w-full h-12 sm:h-14 mb-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg"
             >
-              <Camera className="w-6 h-6 sm:w-7 sm:h-7 mr-2" />
+              <Camera className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
               Tomar Foto
             </Button>
             
             <Button
               onClick={handleVoiceInstructions}
               variant="outline"
-              className="w-full h-10 sm:h-12 mb-3 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
+              className="w-full h-9 sm:h-10 mb-2 border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg"
               disabled={isPlayingVoice}
             >
-              <Headphones className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+              <Headphones className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Instrucciones por Voz
             </Button>
 
@@ -929,10 +928,10 @@ const Process = () => {
               <Button
                 onClick={() => setShowPhotoGallery(true)}
                 variant="outline"
-                className="w-full h-10 sm:h-12 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
+                className="w-full h-9 sm:h-10 border-purple-300 text-purple-700 hover:bg-purple-50 rounded-lg"
               >
-                <Images className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
-                Ver Fotos Tomadas ({photos.length}/{calculateTotalSteps()})
+                <Images className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                Ver Fotos Tomadas ({photos.length}/{totalSteps})
               </Button>
             )}
 
@@ -940,10 +939,10 @@ const Process = () => {
               <Button
                 onClick={handleSkipStep}
                 variant="ghost"
-                className="mt-2 sm:mt-3 text-gray-500 hover:text-gray-700"
+                className="mt-1 sm:mt-2 text-gray-500 hover:text-gray-700"
                 size="sm"
               >
-                <X className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
+                <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 Omitir paso (opcional)
               </Button>
             )}

@@ -19,10 +19,6 @@ export default {
 			}
 		},
 		extend: {
-			fontFamily: {
-				sans: ['Outfit', 'sans-serif'],
-				heading: ['Raleway', 'sans-serif'],
-			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -72,13 +68,6 @@ export default {
 					'100': 'hsl(var(--navy-100))',
 					'800': 'hsl(var(--navy-800))',
 					'900': 'hsl(var(--navy-900))',
-				},
-				cazala: {
-					'blue': '#2A52A3',
-					'light-blue': '#70A4D8',
-					'dark-blue': '#1A3A7A',
-					'gray': '#F5F7FA',
-					'dark-gray': '#E0E6EE'
 				}
 			},
 			borderRadius: {
@@ -102,36 +91,11 @@ export default {
 					to: {
 						height: '0'
 					}
-				},
-				'section-transition': {
-					'0%': { 
-						opacity: '0',
-						transform: 'translateY(30px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateY(0)'
-					}
-				},
-				'image-fade-in': {
-					'0%': {
-						opacity: '0',
-						transform: 'scale(0.95)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'scale(1)'
-					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'section-transition': 'section-transition 0.8s ease-out',
-				'image-fade-in': 'image-fade-in 0.5s ease-out'
-			},
-			boxShadow: {
-				'cazala': '0 10px 25px -5px rgba(42, 82, 163, 0.2), 0 8px 15px -6px rgba(42, 82, 163, 0.1)'
+				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
