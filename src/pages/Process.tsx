@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Stepper } from "@/components/ui/stepper";
 import { Switch } from "@/components/ui/switch";
+import { supabase } from "@/integrations/supabase/client";
 
 const COVERAGE_TYPES = [
   {
@@ -383,6 +384,7 @@ const Process = () => {
   const [photoToRetakeIndex, setPhotoToRetakeIndex] = useState<number | null>(null);
   const [locationReceived, setLocationReceived] = useState(false);
   const [autoVoiceInstructions, setAutoVoiceInstructions] = useState(true);
+  const [isSendingPhotos, setIsSendingPhotos] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -646,14 +648,55 @@ const Process = () => {
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (isSendingPhotos) return;
+    
+    setIsSendingPhotos(true);
+    
     toast({
-      title: "¡Proceso completado!",
-      description: "Todas las fotos han sido capturadas correctamente.",
+      title: "Enviando fotos...",
+      description: "Estamos enviando las fotos a nuestro equipo.",
       variant: "default",
     });
     
-    setShowPhotoGallery(false);
+    try {
+      const selectedCoverage = COVERAGE_TYPES.find(type => type.id === coverageType);
+      
+      const response = await supabase.functions.invoke('send-inspection-photos', {
+        body: {
+          photos,
+          coverageType: selectedCoverage?.name || coverageType,
+          userInfo: {
+            location: userLocation
+          }
+        },
+      });
+      
+      if (!response.data?.success) {
+        throw new Error(response.data?.error || "Error al enviar las fotos");
+      }
+      
+      toast({
+        title: "¡Fotos enviadas con éxito!",
+        description: "Gracias por completar el proceso. Nuestro equipo revisará la información.",
+        variant: "default",
+      });
+      
+      setTimeout(() => {
+        navigate("/welcome");
+      }, 3000);
+      
+    } catch (error) {
+      console.error("Error al enviar fotos:", error);
+      toast({
+        title: "Error al enviar fotos",
+        description: "Hubo un problema al enviar las fotos. Por favor, intenta nuevamente más tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingPhotos(false);
+      setShowPhotoGallery(false);
+    }
   };
 
   const handleVoiceInstructions = () => {
@@ -1034,9 +1077,16 @@ const Process = () => {
               <Button 
                 onClick={handleComplete}
                 className="w-full bg-green-600 hover:bg-green-700"
+                disabled={isSendingPhotos}
               >
-                <Send className="w-4 h-4 mr-2" />
-                Enviar todas las fotos
+                {isSendingPhotos ? (
+                  <>Enviando fotos...</>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 mr-2" />
+                    Enviar todas las fotos
+                  </>
+                )}
               </Button>
             )}
           </div>
