@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email with photos
     const emailResponse = await resend.emails.send({
       from: "Inspección <onboarding@resend.dev>",
-      to: ["info@autentikaseguros.com"],
+      to: ["app.grupocazala@gmail.com"],
       subject: `Nueva inspección - ${coverageType}`,
       html: `
         <h1>Nueva Inspección Completada</h1>
