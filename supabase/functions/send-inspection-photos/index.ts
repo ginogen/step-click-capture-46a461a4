@@ -28,6 +28,11 @@ interface ContactFormData {
   companyType: string;
 }
 
+// This is your verified email in Resend's testing environment
+const VERIFIED_TEST_EMAIL = "ginogentileg@gmail.com";
+// Whether we're in testing mode (true) or production mode with verified domain (false)
+const IS_TESTING_MODE = true;
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -48,11 +53,17 @@ const handler = async (req: Request): Promise<Response> => {
 
       console.log("Sending contact form data:", formData);
       
+      // Store the form data to ensure we have it even if email sending fails
+      console.log("Contact form submission:", JSON.stringify(formData, null, 2));
+      
       // Send email with contact form data
       try {
+        // In testing mode, we can only send to the verified email
+        const toEmail = IS_TESTING_MODE ? VERIFIED_TEST_EMAIL : "hola@builders-ai.com";
+        
         const emailResponse = await resend.emails.send({
           from: "Formulario de Contacto <onboarding@resend.dev>",
-          to: ["hola@builders-ai.com"],
+          to: [toEmail],
           subject: "Nuevo contacto desde Cazalá",
           html: `
             <h1>Nuevo contacto desde la landing page</h1>
@@ -63,19 +74,22 @@ const handler = async (req: Request): Promise<Response> => {
           `,
         });
 
-        console.log("Contact form email sent successfully:", emailResponse);
-        
         if (emailResponse.error) {
           console.error("Error from Resend API:", emailResponse.error);
-          // Still return success to the user even if there's an API error
-          // This prevents exposing API errors to users while we debug
+          console.error("Full error details:", JSON.stringify(emailResponse, null, 2));
+        } else {
+          console.log("Contact form email sent successfully:", emailResponse);
         }
       } catch (emailError) {
         console.error("Error sending email:", emailError);
-        // Still return success to the user even if there's an email sending error
+        console.error("Error details:", JSON.stringify(emailError, null, 2));
       }
 
-      return new Response(JSON.stringify({ success: true, message: "Formulario enviado correctamente" }), {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "Formulario enviado correctamente",
+        note: IS_TESTING_MODE ? "En modo de prueba, los correos solo se envían a la dirección verificada." : ""
+      }), {
         status: 200,
         headers: {
           "Content-Type": "application/json",
@@ -112,9 +126,12 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Send email with photos
       try {
+        // In testing mode, we can only send to the verified email
+        const toEmail = IS_TESTING_MODE ? VERIFIED_TEST_EMAIL : "app.grupocazala@gmail.com";
+        
         const emailResponse = await resend.emails.send({
           from: "Inspección <onboarding@resend.dev>",
-          to: ["app.grupocazala@gmail.com"],
+          to: [toEmail],
           subject: `Nueva inspección - ${coverageType}`,
           html: `
             <h1>Nueva Inspección Completada</h1>
@@ -126,18 +143,22 @@ const handler = async (req: Request): Promise<Response> => {
           attachments: photoAttachments,
         });
 
-        console.log("Email sent successfully:", emailResponse);
-        
         if (emailResponse.error) {
           console.error("Error from Resend API:", emailResponse.error);
-          // Still return success to the user even if there's an API error
+          console.error("Full error details:", JSON.stringify(emailResponse, null, 2));
+        } else {
+          console.log("Email sent successfully:", emailResponse);
         }
       } catch (emailError) {
         console.error("Error sending email:", emailError);
-        // Still return success to the user even if there's an email sending error
+        console.error("Error details:", JSON.stringify(emailError, null, 2));
       }
 
-      return new Response(JSON.stringify({ success: true, message: "Fotos enviadas correctamente" }), {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: "Fotos enviadas correctamente",
+        note: IS_TESTING_MODE ? "En modo de prueba, los correos solo se envían a la dirección verificada." : ""
+      }), {
         status: 200,
         headers: {
           "Content-Type": "application/json",
