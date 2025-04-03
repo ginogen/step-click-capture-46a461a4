@@ -28,10 +28,10 @@ interface ContactFormData {
   companyType: string;
 }
 
-// This is your verified email in Resend's testing environment
-const VERIFIED_TEST_EMAIL = "ginogentileg@gmail.com";
 // Whether we're in testing mode (true) or production mode with verified domain (false)
-const IS_TESTING_MODE = true;
+const IS_TESTING_MODE = false;
+// This is only used in testing mode
+const VERIFIED_TEST_EMAIL = "ginogentileg@gmail.com";
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
