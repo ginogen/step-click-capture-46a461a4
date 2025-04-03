@@ -15,6 +15,8 @@ import {
 import { Stepper } from "@/components/ui/stepper";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const COVERAGE_TYPES = [
   {
@@ -104,6 +106,11 @@ const GUIDE_IMAGES = {
       instruction: "Aléjate para que se vea todo el vehículo y asegúrate de que no salga cortado."
     },
     {
+      url: "/lovable-uploads/7721fb43-8d1b-4586-8d9b-01a0043a355b.png",
+      title: "DEL TABLERO",
+      instruction: "Se saca desde la puerta enfocando en diagonal."
+    },
+    {
       url: "/lovable-uploads/345c1f59-dbce-41d5-9de9-b6aa67d209d1.png",
       title: "DEL CUENTA KM",
       instruction: "Captura los kilómetros del vehículo y verifica que se lean bien."
@@ -188,14 +195,14 @@ const BUILDING_INSTRUCTIONS = {
       icon: <Camera className="w-5 h-5" />
     },
     {
-      title: "LATERAL IZQUIERDO",
+      title: "LATERAL IZQUIERDO DEL EDIFICIO",
       instruction: "Donde se vea todo el lateral completo",
       voiceInstruction: "Toma una foto donde se vea todo el lateral izquierdo completo del edificio.",
       icon: <Camera className="w-5 h-5" />
     },
     {
-      title: "LATERAL DERECHO",
-      instruction: "Donde se vea todo el lateral completo",
+      title: "LATERAL DERECHO DEL EDIFICIO",
+      instruction: "Donde se vea todo el lateral derecho completo",
       voiceInstruction: "Toma una foto donde se vea todo el lateral derecho completo del edificio.",
       icon: <Camera className="w-5 h-5" />
     },
@@ -227,14 +234,14 @@ const BUILDING_INSTRUCTIONS = {
       icon: <Camera className="w-5 h-5" />
     },
     {
-      title: "LATERAL IZQUIERDO",
+      title: "LATERAL IZQUIERDO DEL EDIFICIO",
       instruction: "Donde se vea todo el lateral completo",
       voiceInstruction: "Toma una foto donde se vea todo el lateral izquierdo completo del edificio.",
       icon: <Camera className="w-5 h-5" />
     },
     {
-      title: "LATERAL DERECHO",
-      instruction: "Donde se vea todo el lateral completo",
+      title: "LATERAL DERECHO DEL EDIFICIO",
+      instruction: "Donde se vea todo el lateral derecho completo",
       voiceInstruction: "Toma una foto donde se vea todo el lateral derecho completo del edificio.",
       icon: <Camera className="w-5 h-5" />
     },
@@ -264,13 +271,13 @@ const BUILDING_INSTRUCTIONS = {
       icon: <Tv className="w-5 h-5" />
     },
     {
-      title: "TV 2",
+      title: "TV 2 / otro",
       instruction: "Que se vea que está encendido y funcionando",
       voiceInstruction: "Toma una foto del segundo televisor donde se pueda ver que está encendido y funcionando.",
       icon: <Tv className="w-5 h-5" />
     },
     {
-      title: "COMPUTADORA",
+      title: "COMPUTADORA / OTRO",
       instruction: "Que se vea que está encendida y funcionando",
       voiceInstruction: "Toma una foto de la computadora donde se pueda ver que está encendida y funcionando.",
       icon: <Computer className="w-5 h-5" />
@@ -299,7 +306,8 @@ const generateStepsForCoverage = (coverageType) => {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
         voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
-        optional: true
+        optional: true,
+        guideImage: "/lovable-uploads/gnc-certificate.jpg"
       }
     ];
   }
@@ -318,7 +326,8 @@ const generateStepsForCoverage = (coverageType) => {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
         voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
-        optional: true
+        optional: true,
+        guideImage: "/lovable-uploads/gnc-certificate.jpg"
       }
     ];
   }
@@ -337,7 +346,8 @@ const generateStepsForCoverage = (coverageType) => {
         title: "GNC (si corresponde)",
         instruction: "Si tu vehículo tiene GNC, toma una foto del certificado.",
         voiceInstruction: "Si tu vehículo tiene instalación de GNC, por favor toma una foto del certificado. Si no aplica, puedes saltar este paso.",
-        optional: true
+        optional: true,
+        guideImage: "/lovable-uploads/gnc-certificate.jpg"
       }
     ];
   }
@@ -385,6 +395,9 @@ const Process = () => {
   const [locationReceived, setLocationReceived] = useState(false);
   const [autoVoiceInstructions, setAutoVoiceInstructions] = useState(true);
   const [isSendingPhotos, setIsSendingPhotos] = useState(false);
+  const [showNameDialog, setShowNameDialog] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [nameError, setNameError] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -492,7 +505,7 @@ const Process = () => {
               <Button 
                 onClick={() => requestLocationPermission()}
                 variant="outline" 
-                size="sm"
+                className="text-xs text-white p-0 ml-1 h-auto"
               >
                 Reintentar
               </Button>
@@ -640,7 +653,13 @@ const Process = () => {
   const handleGNCResponse = (hasGNCInstalled: boolean) => {
     setHasGNC(hasGNCInstalled);
     
-    if (!hasGNCInstalled) {
+    if (hasGNCInstalled) {
+      const gncStep = steps.find(step => step.title?.includes("GNC"));
+      if (gncStep) {
+        gncStep.guideImage = "/lovable-uploads/gnc-certificate.jpg";
+        gncStep.optional = false;
+      }
+    } else {
       if (currentStep < steps.length - 1) {
         setCurrentStep(steps.length - 1);
       }
@@ -651,7 +670,19 @@ const Process = () => {
   const handleComplete = async () => {
     if (isSendingPhotos) return;
     
+    setShowNameDialog(true);
+  };
+
+  const handleSendPhotos = async () => {
+    if (isSendingPhotos || !userName.trim()) {
+      if (!userName.trim()) {
+        setNameError("Por favor, ingresa tu nombre completo");
+      }
+      return;
+    }
+    
     setIsSendingPhotos(true);
+    setShowNameDialog(false);
     
     toast({
       title: "Enviando fotos...",
@@ -667,7 +698,8 @@ const Process = () => {
           photos,
           coverageType: selectedCoverage?.name || coverageType,
           userInfo: {
-            location: userLocation
+            location: userLocation,
+            fullName: userName.trim()
           }
         },
       });
@@ -760,6 +792,7 @@ const Process = () => {
       });
       
       const isGNCStep = steps[currentStep]?.title?.includes("GNC");
+      const isMatafuegoStep = steps[currentStep]?.title?.includes("MATAFUEGO");
       
       if (isGNCStep) {
         setHasGNC(false);
@@ -768,6 +801,14 @@ const Process = () => {
           setCurrentStep(steps.length - 1);
         }
         setShowPhotoGallery(true);
+      } else if (isMatafuegoStep) {
+        if (currentStep >= steps.length - 1 || 
+            (["edificio_incendio", "combinado_integral"].includes(coverageType) && 
+             currentStep === steps.length - 2)) {
+          setShowPhotoGallery(true);
+        } else {
+          setCurrentStep(currentStep + 1);
+        }
       } else if (currentStep < steps.length - 1) {
         setCurrentStep(currentStep + 1);
       } else {
@@ -790,6 +831,13 @@ const Process = () => {
         return steps.length - 1;
       }
       return steps.length;
+    }
+    
+    if (["edificio_incendio", "combinado_integral"].includes(coverageType)) {
+      const matafuegoStep = steps.find(step => step.title?.includes("MATAFUEGO"));
+      if (matafuegoStep?.optional === true && photos.length === steps.length - 1) {
+        return steps.length - 1;
+      }
     }
     
     return steps.length;
@@ -1090,6 +1138,56 @@ const Process = () => {
               </Button>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Ingresa tu nombre completo</DialogTitle>
+            <DialogDescription>
+              Para completar el proceso, necesitamos tu nombre completo.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Nombre Completo</Label>
+              <Input
+                id="fullName"
+                placeholder="Ej: Juan Pérez"
+                value={userName}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                  if (e.target.value.trim()) {
+                    setNameError("");
+                  }
+                }}
+                className={nameError ? "border-red-500" : ""}
+              />
+              {nameError && (
+                <p className="text-sm text-red-500">{nameError}</p>
+              )}
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setShowNameDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleSendPhotos}
+              disabled={!userName.trim() || isSendingPhotos}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              {isSendingPhotos ? "Enviando..." : "Enviar fotos"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

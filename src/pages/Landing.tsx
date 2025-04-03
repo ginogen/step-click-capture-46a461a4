@@ -95,7 +95,7 @@ const Landing = () => {
                 <span className="inline-block fadeInUp delay-300">de tus clientes</span>
               </h1>
               <p className="text-xl text-slate-700 mb-8 fadeInUp delay-400">
-                Evita fraudes y falsificaciones al momento de emitir una póliza.
+                Evita fraudes y falsificaciones al momento de emitir una póliza. 100% seguro.
               </p>
               <div className="flex justify-center md:justify-start fadeInUp delay-500">
                 <Link to="/welcome">
@@ -502,7 +502,7 @@ const Landing = () => {
             <img alt="Cazalá Logo" className="h-12 transparent-bg" src="/lovable-uploads/5bdd74f9-9f49-40f2-a96a-65b25d00d707.png" />
           </div>
           <div className="text-slate-600 text-sm">
-            © {new Date().getFullYear()} Cazalá Seguros. Todos los derechos reservados.
+            © {new Date().getFullYear()} Autentika. Todos los derechos reservados.
           </div>
         </div>
       </footer>
