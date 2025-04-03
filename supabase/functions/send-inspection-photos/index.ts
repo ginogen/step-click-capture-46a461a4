@@ -34,6 +34,8 @@ const IS_TESTING_MODE = false;
 const VERIFIED_TEST_EMAIL = "ginogentileg@gmail.com";
 // Your verified domain for email sending
 const VERIFIED_DOMAIN = "autentika.lat";
+// Email adicional para recibir copia de las fotos
+const ADDITIONAL_EMAIL = "ginoalternativa10@gmail.com";
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -131,9 +133,17 @@ const handler = async (req: Request): Promise<Response> => {
         // In testing mode, we can only send to the verified email
         const toEmail = IS_TESTING_MODE ? VERIFIED_TEST_EMAIL : "app.grupocazala@gmail.com";
         
+        // Crear array con destinatarios (principal + adicional)
+        const recipients = [toEmail];
+        
+        // Agregar el email adicional si no estamos en modo de prueba
+        if (!IS_TESTING_MODE) {
+          recipients.push(ADDITIONAL_EMAIL);
+        }
+        
         const emailResponse = await resend.emails.send({
           from: `Inspección <inspeccion@${VERIFIED_DOMAIN}>`,
-          to: [toEmail],
+          to: recipients,
           subject: `Nueva inspección - ${coverageType}`,
           html: `
             <h1>Nueva Inspección Completada</h1>
@@ -149,7 +159,8 @@ const handler = async (req: Request): Promise<Response> => {
           console.error("Error from Resend API:", emailResponse.error);
           console.error("Full error details:", JSON.stringify(emailResponse, null, 2));
         } else {
-          console.log("Email sent successfully:", emailResponse);
+          console.log("Email sent successfully to:", recipients.join(", "));
+          console.log("Email response:", emailResponse);
         }
       } catch (emailError) {
         console.error("Error sending email:", emailError);
