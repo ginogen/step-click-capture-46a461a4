@@ -278,7 +278,7 @@ const BUILDING_INSTRUCTIONS = {
   ]
 };
 
-const COMPANY_LOGO = "/lovable-uploads/4fc13270-0966-465a-918e-b0d9aff5eb35.png";
+const COMPANY_LOGO = "/lovable-uploads/21f48b1c-97c2-4940-b039-01abe41b8de9.png";
 
 const generateStepsForCoverage = (coverageType) => {
   const { requiredPhotos } = COVERAGE_TYPES.find(
@@ -873,7 +873,7 @@ const Process = () => {
           <div className="flex justify-between items-center mb-2 sm:mb-4">
             <img 
               src={COMPANY_LOGO} 
-              alt="Logo Cazalá Seguros" 
+              alt="Logo Grupo Cazalá Seguros" 
               className="h-8 sm:h-10 object-contain"
             />
             <div className="flex flex-col items-end">
