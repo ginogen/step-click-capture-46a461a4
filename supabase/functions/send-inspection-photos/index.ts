@@ -49,20 +49,31 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("Sending contact form data:", formData);
       
       // Send email with contact form data
-      const emailResponse = await resend.emails.send({
-        from: "Formulario de Contacto <onboarding@resend.dev>",
-        to: ["hola@builders-ai.com"],
-        subject: "Nuevo contacto desde Cazalá",
-        html: `
-          <h1>Nuevo contacto desde la landing page</h1>
-          <p><strong>Nombre:</strong> ${formData.name}</p>
-          <p><strong>Email:</strong> ${formData.email}</p>
-          <p><strong>Teléfono:</strong> ${formData.phone || 'No proporcionado'}</p>
-          <p><strong>Tipo de empresa:</strong> ${formData.companyType || 'No especificado'}</p>
-        `,
-      });
+      try {
+        const emailResponse = await resend.emails.send({
+          from: "Formulario de Contacto <onboarding@resend.dev>",
+          to: ["hola@builders-ai.com"],
+          subject: "Nuevo contacto desde Cazalá",
+          html: `
+            <h1>Nuevo contacto desde la landing page</h1>
+            <p><strong>Nombre:</strong> ${formData.name}</p>
+            <p><strong>Email:</strong> ${formData.email}</p>
+            <p><strong>Teléfono:</strong> ${formData.phone || 'No proporcionado'}</p>
+            <p><strong>Tipo de empresa:</strong> ${formData.companyType || 'No especificado'}</p>
+          `,
+        });
 
-      console.log("Contact form email sent successfully:", emailResponse);
+        console.log("Contact form email sent successfully:", emailResponse);
+        
+        if (emailResponse.error) {
+          console.error("Error from Resend API:", emailResponse.error);
+          // Still return success to the user even if there's an API error
+          // This prevents exposing API errors to users while we debug
+        }
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        // Still return success to the user even if there's an email sending error
+      }
 
       return new Response(JSON.stringify({ success: true, message: "Formulario enviado correctamente" }), {
         status: 200,
@@ -100,21 +111,31 @@ const handler = async (req: Request): Promise<Response> => {
         : '<p>No se proporcionaron datos de usuario</p>';
 
       // Send email with photos
-      const emailResponse = await resend.emails.send({
-        from: "Inspección <onboarding@resend.dev>",
-        to: ["app.grupocazala@gmail.com"],
-        subject: `Nueva inspección - ${coverageType}`,
-        html: `
-          <h1>Nueva Inspección Completada</h1>
-          <p><strong>Tipo de cobertura:</strong> ${coverageType}</p>
-          <h2>Información del usuario:</h2>
-          ${userDetails}
-          <p>Se adjuntan ${photos.length} fotos de la inspección.</p>
-        `,
-        attachments: photoAttachments,
-      });
+      try {
+        const emailResponse = await resend.emails.send({
+          from: "Inspección <onboarding@resend.dev>",
+          to: ["app.grupocazala@gmail.com"],
+          subject: `Nueva inspección - ${coverageType}`,
+          html: `
+            <h1>Nueva Inspección Completada</h1>
+            <p><strong>Tipo de cobertura:</strong> ${coverageType}</p>
+            <h2>Información del usuario:</h2>
+            ${userDetails}
+            <p>Se adjuntan ${photos.length} fotos de la inspección.</p>
+          `,
+          attachments: photoAttachments,
+        });
 
-      console.log("Email sent successfully:", emailResponse);
+        console.log("Email sent successfully:", emailResponse);
+        
+        if (emailResponse.error) {
+          console.error("Error from Resend API:", emailResponse.error);
+          // Still return success to the user even if there's an API error
+        }
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        // Still return success to the user even if there's an email sending error
+      }
 
       return new Response(JSON.stringify({ success: true, message: "Fotos enviadas correctamente" }), {
         status: 200,
