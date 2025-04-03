@@ -32,6 +32,8 @@ interface ContactFormData {
 const IS_TESTING_MODE = false;
 // This is only used in testing mode
 const VERIFIED_TEST_EMAIL = "ginogentileg@gmail.com";
+// Your verified domain for email sending
+const VERIFIED_DOMAIN = "autentika.lat";
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -62,7 +64,7 @@ const handler = async (req: Request): Promise<Response> => {
         const toEmail = IS_TESTING_MODE ? VERIFIED_TEST_EMAIL : "hola@builders-ai.com";
         
         const emailResponse = await resend.emails.send({
-          from: "Formulario de Contacto <onboarding@resend.dev>",
+          from: `Formulario de Contacto <contacto@${VERIFIED_DOMAIN}>`,
           to: [toEmail],
           subject: "Nuevo contacto desde Cazalá",
           html: `
@@ -130,7 +132,7 @@ const handler = async (req: Request): Promise<Response> => {
         const toEmail = IS_TESTING_MODE ? VERIFIED_TEST_EMAIL : "app.grupocazala@gmail.com";
         
         const emailResponse = await resend.emails.send({
-          from: "Inspección <onboarding@resend.dev>",
+          from: `Inspección <inspeccion@${VERIFIED_DOMAIN}>`,
           to: [toEmail],
           subject: `Nueva inspección - ${coverageType}`,
           html: `
