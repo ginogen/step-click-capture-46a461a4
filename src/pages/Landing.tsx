@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Landing = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
@@ -28,13 +28,24 @@ const Landing = () => {
   const onSubmit = async (data: any) => {
     setSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log("Form submitted:", data);
-    toast.success("Solicitud enviada correctamente");
-    form.reset();
-    setSubmitting(false);
+    try {
+      // Call our Supabase Edge Function to send the form data
+      const { error } = await supabase.functions.invoke('send-inspection-photos/send-contact-form', {
+        body: data
+      });
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      toast.success("Solicitud enviada correctamente");
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Error al enviar el formulario. Por favor, inténtalo de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
   };
   
   useEffect(() => {
