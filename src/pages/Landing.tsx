@@ -1,10 +1,42 @@
-import React, { useEffect, useRef } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Camera, MapPin, Clock, Shield, CheckCircle, AlertTriangle, ChevronRight, Globe, Mail, FileText, Image as ImageIcon, MessageSquare, Calendar, Lock, ShieldCheck, BadgeCheck, Clock3, MapPinned, ShieldAlert } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 const Landing = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  
+  // Form setup
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      companyType: ""
+    }
+  });
+  
+  // Form submission handler
+  const onSubmit = async (data: any) => {
+    setSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    console.log("Form submitted:", data);
+    toast.success("Solicitud enviada correctamente");
+    form.reset();
+    setSubmitting(false);
+  };
+  
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -27,11 +59,13 @@ const Landing = () => {
       });
     };
   }, []);
+  
   const addToRefs = (el: HTMLElement | null) => {
     if (el && !sectionRefs.current.includes(el)) {
       sectionRefs.current.push(el);
     }
   };
+  
   return <div className="min-h-screen bg-white">
       <section className="gradient-hero py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
@@ -215,6 +249,9 @@ const Landing = () => {
                   </div>
                   <p className="text-lg font-medium">Logo y colores de tu empresa</p>
                 </div>
+                <p className="text-slate-600 ml-11">
+                  Podes personalizar la app para que tus clientes te identifiquen.
+                </p>
               </CardContent>
             </Card>
             
@@ -226,6 +263,9 @@ const Landing = () => {
                   </div>
                   <p className="text-lg font-medium">Tu propio dominio</p>
                 </div>
+                <p className="text-slate-600 ml-11">
+                  Tu nombre de dominio para mayor personalización.
+                </p>
               </CardContent>
             </Card>
             
@@ -237,6 +277,9 @@ const Landing = () => {
                   </div>
                   <p className="text-lg font-medium">Cantidad de fotos requeridas</p>
                 </div>
+                <p className="text-slate-600 ml-11">
+                  Vos definis polizas y cantidad de fotos a requerir.
+                </p>
               </CardContent>
             </Card>
             
@@ -248,6 +291,9 @@ const Landing = () => {
                   </div>
                   <p className="text-lg font-medium">Instrucciones y ejemplos visuales</p>
                 </div>
+                <p className="text-slate-600 ml-11">
+                  Tenes que proveer las fotos de ejemplos correctos e instrucciones.
+                </p>
               </CardContent>
             </Card>
             
@@ -259,6 +305,9 @@ const Landing = () => {
                   </div>
                   <p className="text-lg font-medium">Email donde recibir las fotos</p>
                 </div>
+                <p className="text-slate-600 ml-11">
+                  Para recibir las fotos de cada cliente.
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -308,7 +357,7 @@ const Landing = () => {
                   <BadgeCheck className="h-10 w-10 text-green-500" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-center mb-2">Pólizas de automotor</h3>
+              <h3 className="text-xl font-semibold text-center mb-2">Pólizas de automotor y otras</h3>
             </div>
             <div className="gradient-card p-8 rounded-xl shadow-lg border-none transition-all duration-300 hover:-translate-y-2">
               <div className="flex justify-center mb-6">
@@ -343,14 +392,96 @@ const Landing = () => {
             <br />
             Seguridad y transparencia para vos. Tranquilidad para tus clientes.
           </p>
-          <Link to="/welcome">
-            <Button size="lg" className="bg-white text-navy-900 hover:bg-slate-100 group relative overflow-hidden">
-              <span className="relative z-10 flex items-center">
-                Solicitar Demo <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-              </span>
-              <span className="absolute top-0 left-0 w-full h-full bg-blue-50 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-            </Button>
-          </Link>
+          
+          <div className="max-w-md mx-auto bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Nombre</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Tu nombre completo" 
+                          {...field} 
+                          className="bg-white/20 text-white placeholder:text-white/60 border-white/30"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Email</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="email"
+                          placeholder="tucorreo@ejemplo.com" 
+                          {...field} 
+                          className="bg-white/20 text-white placeholder:text-white/60 border-white/30" 
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Teléfono</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Tu número de teléfono" 
+                          {...field} 
+                          className="bg-white/20 text-white placeholder:text-white/60 border-white/30" 
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="companyType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Tipo de empresa</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-white/20 text-white border-white/30">
+                            <SelectValue placeholder="Seleccionar" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="productor">Productor de Seguros</SelectItem>
+                          <SelectItem value="agencia">Agencia de Seguros</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                
+                <Button 
+                  type="submit" 
+                  className="w-full bg-white text-navy-900 hover:bg-slate-100"
+                  disabled={submitting}
+                >
+                  {submitting ? "Enviando..." : "Solicitar Demo"}
+                </Button>
+              </form>
+            </Form>
+          </div>
         </div>
       </section>
 
