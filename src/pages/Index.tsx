@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -16,9 +17,12 @@ const Index = () => {
     }
   });
 
-  // Function to scroll to the contact form
+  // Scroll to contact form function
   const scrollToContactForm = () => {
-    contactFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+    contactFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   };
 
   // Form submission handler
