@@ -17,13 +17,7 @@ const Index = () => {
     }
   });
 
-  // Scroll to contact form function
-  const scrollToContactForm = () => {
-    contactFormRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  };
+ 
 
   // Form submission handler
   const onSubmit = async (data: any) => {
@@ -74,7 +68,7 @@ const Index = () => {
             <Button 
               size="lg" 
               className="relative overflow-hidden group bg-navy-900 hover:bg-navy-800 text-white"
-              onClick={scrollToContactForm}
+              
             >
               <span className="relative z-10">Solicitar Demo</span>
               <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
