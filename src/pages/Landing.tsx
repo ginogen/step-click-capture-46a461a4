@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 const Landing = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const contactFormRef = useRef<HTMLElement | null>(null);
   
   // Form setup
   const form = useForm({
@@ -23,6 +24,14 @@ const Landing = () => {
       companyType: ""
     }
   });
+  
+  // Scroll to contact form function
+  const scrollToContactForm = () => {
+    contactFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  };
   
   // Form submission handler
   const onSubmit = async (data: any) => {
@@ -98,12 +107,14 @@ const Landing = () => {
                 Evita fraudes y falsificaciones al momento de emitir una póliza. 100% seguro.
               </p>
               <div className="flex justify-center md:justify-start fadeInUp delay-500">
-                <Link to="/welcome">
-                  <Button size="lg" className="relative overflow-hidden group bg-navy-900 hover:bg-navy-800 text-white">
-                    <span className="relative z-10">Solicitar Demo</span>
-                    <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-                  </Button>
-                </Link>
+                <Button 
+                  size="lg" 
+                  className="relative overflow-hidden group bg-navy-900 hover:bg-navy-800 text-white"
+                  onClick={scrollToContactForm}
+                >
+                  <span className="relative z-10">Solicitar Demo</span>
+                  <span className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                </Button>
               </div>
             </div>
             <div className="md:w-1/2">
@@ -390,7 +401,13 @@ const Landing = () => {
         </div>
       </section>
 
-      <section className="gradient-navy text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" ref={addToRefs}>
+      <section 
+        className="gradient-navy text-white py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" 
+        ref={(el) => { 
+          addToRefs(el);
+          contactFormRef.current = el;
+        }}
+      >
         <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full opacity-5"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white rounded-full opacity-5"></div>
         
