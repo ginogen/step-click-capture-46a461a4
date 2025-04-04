@@ -18,6 +18,7 @@ interface PhotoData {
     email?: string;
     phone?: string;
     location?: string;
+    fullName?: string; // Added to support the fullName field
   };
 }
 
@@ -121,8 +122,11 @@ const handler = async (req: Request): Promise<Response> => {
         };
       });
 
+      // Extract fullName or use other name fields if available
+      const userName = userInfo?.fullName || userInfo?.name || 'No proporcionado';
+
       const userDetails = userInfo ? 
-        `<p><strong>Nombre:</strong> ${userInfo.name || 'No proporcionado'}</p>
+        `<p><strong>Nombre:</strong> ${userName}</p>
          <p><strong>Email:</strong> ${userInfo.email || 'No proporcionado'}</p>
          <p><strong>Teléfono:</strong> ${userInfo.phone || 'No proporcionado'}</p>
          <p><strong>Ubicación:</strong> ${userInfo.location || 'No proporcionada'}</p>` 
