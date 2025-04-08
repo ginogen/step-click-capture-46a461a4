@@ -398,6 +398,7 @@ const Process = () => {
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [userName, setUserName] = useState("");
   const [nameError, setNameError] = useState("");
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const { toast } = useToast();
@@ -708,15 +709,7 @@ const Process = () => {
         throw new Error(response.data?.error || "Error al enviar las fotos");
       }
       
-      toast({
-        title: "¡Fotos enviadas con éxito!",
-        description: "Gracias por completar el proceso. Nuestro equipo revisará la información.",
-        variant: "default",
-      });
-      
-      setTimeout(() => {
-        navigate("/welcome");
-      }, 3000);
+      setShowSuccessDialog(true);
       
     } catch (error) {
       console.error("Error al enviar fotos:", error);
@@ -1186,6 +1179,38 @@ const Process = () => {
               className="bg-green-600 hover:bg-green-700"
             >
               {isSendingPhotos ? "Enviando..." : "Enviar fotos"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md text-center">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-green-600 flex items-center justify-center gap-2">
+              <Check className="w-6 h-6" />
+              ¡ÉXITO!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="py-6">
+            <p className="text-xl font-bold text-gray-900">
+              SUS FOTOS FUERON ENVIADAS CON ÉXITO
+            </p>
+            <p className="mt-2 text-gray-600">
+              Gracias por completar el proceso. Nuestro equipo revisará la información.
+            </p>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              onClick={() => {
+                setShowSuccessDialog(false);
+                navigate("/welcome");
+              }}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              Finalizar
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -14,6 +14,7 @@ const Landing = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const contactFormRef = useRef<HTMLElement | null>(null);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
   
   // Form setup
   const form = useForm({
@@ -80,6 +81,24 @@ const Landing = () => {
     };
   }, []);
   
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contactFormRef.current) return;
+
+      const scrollPosition = window.scrollY;
+      const formPosition = contactFormRef.current.offsetTop;
+      
+      // Mostrar el botón cuando hay scroll y estamos lejos del form
+      setShowFloatingButton(
+        scrollPosition > 300 && // Comenzar a mostrar después de 300px de scroll
+        scrollPosition < formPosition - 500 // Ocultar 500px antes del form
+      );
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   const addToRefs = (el: HTMLElement | null) => {
     if (el && !sectionRefs.current.includes(el)) {
       sectionRefs.current.push(el);
@@ -123,12 +142,6 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
-      <div className="w-full bg-white">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" className="w-full h-20">
-          <path d="M0 0L48 10.7C96 21.3 192 42.7 288 53.3C384 64 480 64 576 58.7C672 53.3 768 42.7 864 37.3C960 32 1056 32 1152 32C1248 32 1344 32 1392 32L1440 32V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V0Z" fill="#F6F9FC" />
-        </svg>
-      </div>
 
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
         <div className="max-w-7xl mx-auto">
@@ -188,150 +201,89 @@ const Landing = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 sm:px-6 lg:px-8 gradient-hero" ref={addToRefs}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
-              🔐 ¿Cómo funciona?
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
-                  1
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Acceso personalizado</h3>
-                  <p className="text-slate-700">
-                    El cliente accede al link personalizado con tu logo, tus colores y dominio.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
-                  2
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Guía paso a paso</h3>
-                  <p className="text-slate-700">
-                    La app guía al usuario con instrucciones claras y ejemplos para tomar cada foto correctamente.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
-                  3
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Verificación automática</h3>
-                  <p className="text-slate-700">
-                    Cada imagen se toma en el momento, con ubicación, fecha y hora exacta, y marca de agua con todos los datos.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start p-6 bg-white rounded-xl shadow-md transition-transform duration-300 hover:translate-x-2">
-                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full gradient-navy text-white font-bold">
-                  4
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Entrega segura</h3>
-                  <p className="text-slate-700">
-                    Las fotos son enviadas directamente a tu email. El cliente no puede descargarlas ni modificar nada.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-xl overflow-hidden drop-shadow-2xl">
-              <img src="/lovable-uploads/95beaf30-e1ea-4d56-8db5-2a942d4e0750.png" alt="Proceso de la aplicación" className="w-full h-auto rounded-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.3)] max-w-sm mx-auto transparent-bg" />
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
-              ✨ Personaliza todo a tu medida
+              🎯 ¿Cómo funciona?
             </h2>
+            <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
+              Un proceso simple y efectivo para obtener las fotos que necesitas
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <ImageIcon className="h-5 w-5 text-navy-900" />
+          <div className="space-y-20">
+            {/* Paso 1 */}
+            <div className="flex flex-col md:flex-row items-center gap-12">
+              <div className="md:w-1/2">
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-navy-900 text-white flex items-center justify-center font-bold">
+                      1
+                    </div>
+                    <h3 className="text-xl font-bold">Acceso Personalizado</h3>
                   </div>
-                  <p className="text-lg font-medium">Logo y colores de tu empresa</p>
+                  <p className="text-slate-600 ml-14">
+                    El usuario ingresa a la webapp y puede ver tu logo con tus instrucciones y tipo de Coberturas
+                  </p>
                 </div>
-                <p className="text-slate-600 ml-11">
-                  Podes personalizar la app para que tus clientes te identifiquen.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Globe className="h-5 w-5 text-navy-900" />
+              </div>
+              <div className="md:w-1/2">
+                <img 
+                  src="public/lovable-uploads/Foto1.png" 
+                  alt="Paso 1" 
+                  className="rounded-xl shadow-lg w-full max-w-md mx-auto"
+                />
+              </div>
+            </div>
+
+            {/* Paso 2 */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-12">
+              <div className="md:w-1/2">
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-navy-900 text-white flex items-center justify-center font-bold">
+                      2
+                    </div>
+                    <h3 className="text-xl font-bold">Selección de Cobertura</h3>
                   </div>
-                  <p className="text-lg font-medium">Tu propio dominio</p>
+                  <p className="text-slate-600 ml-14">
+                    Se pueden determinar sub tipos de coberturas
+                  </p>
                 </div>
-                <p className="text-slate-600 ml-11">
-                  Tu nombre de dominio para mayor personalización.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Camera className="h-5 w-5 text-navy-900" />
+              </div>
+              <div className="md:w-1/2">
+                <img 
+                  src="/lovable-uploads/Foto2.png" 
+                  alt="Paso 2" 
+                  className="rounded-xl shadow-lg w-full max-w-md mx-auto"
+                />
+              </div>
+            </div>
+
+            {/* Paso 3 */}
+            <div className="flex flex-col md:flex-row items-center gap-12">
+              <div className="md:w-1/2">
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-navy-900 text-white flex items-center justify-center font-bold">
+                      3
+                    </div>
+                    <h3 className="text-xl font-bold">Guía Interactiva</h3>
                   </div>
-                  <p className="text-lg font-medium">Cantidad de fotos requeridas</p>
+                  <p className="text-slate-600 ml-14">
+                    El usuario accede al paso a paso para tomar las fotos, con instrucciones de texto, de voz y visuales para finalmente enviar las fotos al email automáticamente.
+                  </p>
                 </div>
-                <p className="text-slate-600 ml-11">
-                  Vos definis polizas y cantidad de fotos a requerir.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <FileText className="h-5 w-5 text-navy-900" />
-                  </div>
-                  <p className="text-lg font-medium">Instrucciones y ejemplos visuales</p>
-                </div>
-                <p className="text-slate-600 ml-11">
-                  Tenes que proveer las fotos de ejemplos correctos e instrucciones.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="gradient-card shadow-lg border-none rounded-xl">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-4">
-                  <div className="rounded-full feature-icon-bg p-3 mr-3">
-                    <Mail className="h-5 w-5 text-navy-900" />
-                  </div>
-                  <p className="text-lg font-medium">Email donde recibir las fotos</p>
-                </div>
-                <p className="text-slate-600 ml-11">
-                  Para recibir las fotos de cada cliente.
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="md:w-1/2">
+                <img 
+                  src="/lovable-uploads/Foto3.png" 
+                  alt="Paso 3" 
+                  className="rounded-xl shadow-lg w-full max-w-md mx-auto"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -397,6 +349,260 @@ const Landing = () => {
               </div>
               <h3 className="text-xl font-semibold text-center mb-2">Verificación de condiciones reales</h3>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" ref={addToRefs}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900">
+              💰 Planes y Precios
+            </h2>
+            <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
+              Elegí el plan que mejor se adapte a tus necesidades
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Plan Individual */}
+            <Card className="relative border-2 hover:border-navy-900 transition-all duration-300 flex flex-col">
+              <CardContent className="pt-6 flex flex-col h-full">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-2">Plan Individual</h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-3xl font-bold text-navy-900">U$D 49</span>
+                    <span className="text-gray-600">/mes</span>
+                  </div>
+                  <div className="text-sm text-gray-500 line-through">U$D 98</div>
+                  <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    Ahorro 50%
+                  </div>
+                </div>
+                
+                <ul className="space-y-3 flex-grow">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Webapp con tu logo y colores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Podes elegir fotos de ejemplo e instrucciones</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Cantidad de pasos y tipos de polizas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Fotos con ubicación, fecha, hora y marca de agua</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí las fotos en tu email (Ilimitados)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Soporte Full</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí actualizaciones y nuevas funciones</span>
+                  </li>
+                </ul>
+
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+                    onClick={scrollToContactForm}
+                  >
+                    Suscribirme
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Plan Grupo */}
+            <Card className="relative border-2 hover:border-navy-900 transition-all duration-300 flex flex-col">
+              <CardContent className="pt-6 flex flex-col h-full">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-2">Plan Grupo</h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-3xl font-bold text-navy-900">U$D 39</span>
+                    <span className="text-gray-600">/mes por miembro</span>
+                  </div>
+                  <div className="text-sm text-gray-500 line-through">U$D 78</div>
+                  <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    Ahorro 50%
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">(Aplica para más de 20 miembros)</p>
+                </div>
+
+                <ul className="space-y-3 flex-grow">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Webapp con tu logo y colores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Podes elegir fotos de ejemplo e instrucciones</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Cantidad de pasos y tipos de polizas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Fotos con ubicación, fecha, hora y marca de agua</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí las fotos en tu email (Ilimitados)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Soporte Full</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí actualizaciones y nuevas funciones</span>
+                  </li>
+                </ul>
+
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+                    onClick={scrollToContactForm}
+                  >
+                    Suscribirme
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Plan Grupo+ */}
+            <Card className="relative border-2 hover:border-navy-900 transition-all duration-300 flex flex-col">
+              <CardContent className="pt-6 flex flex-col h-full">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-2">Plan Grupo+</h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-3xl font-bold text-navy-900">U$D 29</span>
+                    <span className="text-gray-600">/mes por miembro</span>
+                  </div>
+                  <div className="text-sm text-gray-500 line-through">U$D 58</div>
+                  <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    Ahorro 50%
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">(Aplica para más de 100 miembros)</p>
+                </div>
+
+                <ul className="space-y-3 flex-grow">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Webapp con tu logo y colores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Podes elegir fotos de ejemplo e instrucciones</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Cantidad de pasos y tipos de polizas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Fotos con ubicación, fecha, hora y marca de agua</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí las fotos en tu email (Ilimitados)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Soporte Full</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí actualizaciones y nuevas funciones</span>
+                  </li>
+                </ul>
+
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+                    onClick={scrollToContactForm}
+                  >
+                    Suscribirme
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Plan Enterprise */}
+            <Card className="relative border-2 hover:border-navy-900 transition-all duration-300 flex flex-col">
+              <CardContent className="pt-6 flex flex-col h-full">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-2">Plan Enterprise</h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-3xl font-bold text-navy-900">Consultar</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">(Aplica para más de 1000 miembros)</p>
+                </div>
+
+                <ul className="space-y-3 flex-grow">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Webapp con tu logo y colores</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Podes elegir fotos de ejemplo e instrucciones</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Cantidad de pasos y tipos de polizas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Fotos con ubicación, fecha, hora y marca de agua</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí las fotos en tu email (Ilimitados)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Soporte Full</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span>Recibí actualizaciones y nuevas funciones</span>
+                  </li>
+                </ul>
+
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-navy-900 hover:bg-navy-800 text-white"
+                    onClick={scrollToContactForm}
+                  >
+                    Consultar
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-lg text-slate-600">
+              ¿No estas seguro de suscribirte? {" "}
+              <button 
+                onClick={scrollToContactForm}
+                className="text-navy-900 font-semibold hover:underline"
+              >
+                Solicita una demo
+              </button>
+              {" "}y te llamamos para despejar tus dudas.
+            </p>
           </div>
         </div>
       </section>
@@ -523,6 +729,18 @@ const Landing = () => {
           </div>
         </div>
       </footer>
+
+      <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full px-4 sm:px-0 sm:w-auto transition-opacity duration-300 ${
+        showFloatingButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}>
+        <Button 
+          size="lg"
+          className="w-full sm:w-auto bg-navy-900 hover:bg-navy-800 text-white shadow-lg"
+          onClick={scrollToContactForm}
+        >
+          Solicitar Demo
+        </Button>
+      </div>
     </div>;
 };
 export default Landing;
