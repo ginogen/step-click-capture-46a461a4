@@ -48,6 +48,15 @@ const Landing = () => {
         throw new Error(error.message);
       }
       
+      // Trackear el evento de conversión en Meta
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'Lead', {
+          content_name: 'Demo Request',
+          content_category: 'Form Submission',
+          value: data.companyType === 'productor' ? 'Productor' : 'Agencia'
+        });
+      }
+      
       toast.success("Solicitud enviada correctamente");
       form.reset();
     } catch (error) {
