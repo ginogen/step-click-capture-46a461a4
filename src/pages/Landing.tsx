@@ -230,7 +230,7 @@ const Landing = () => {
               </div>
               <div className="md:w-1/2">
                 <img 
-                  src="public/lovable-uploads/Foto1.png" 
+                  src="/lovable-uploads/Foto1.png" 
                   alt="Paso 1" 
                   className="rounded-xl shadow-lg w-full max-w-md mx-auto"
                 />
